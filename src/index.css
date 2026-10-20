@@ -1,12 +1,37 @@
 :root {
+  /* Colors */
   --color-text: #1f2937;
-  --color-bg: #f8fafc;
+  --color-text-muted: #4b5563;
+  --color-bg: #f0f7ff;
+  --color-surface: #ffffff;
+  --color-border: #d1d9e6;
   --color-primary: #2563eb;
+  --color-primary-hover: #1d4ed8;
+  --color-primary-text: #ffffff;
+  --color-secondary: #ffffff;
+  --color-secondary-hover: #e8f0fe;
+  --color-focus: #f59e0b;
 
-  --font-sans: system-ui, 'Segoe UI', Roboto, sans-serif;
+  /* Type: large, rounded where available, for young readers */
+  --font-sans: ui-rounded, 'Nunito', 'Segoe UI', system-ui, Roboto, sans-serif;
+  --font-size-base: 1.125rem;
+  --font-size-lg: 1.375rem;
+  --font-size-xl: 2rem;
+  --font-size-2xl: 2.5rem;
+
+  /* Spacing */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+
+  --radius: 0.75rem;
+  --shadow: 0 2px 6px rgba(15, 23, 42, 0.08);
 
   font-family: var(--font-sans);
-  font-size: 18px;
+  font-size: 100%;
   line-height: 1.5;
   color: var(--color-text);
   background-color: var(--color-bg);
@@ -21,11 +46,42 @@
 body {
   margin: 0;
   min-height: 100vh;
+  font-size: var(--font-size-base);
 }
 
-.app {
-  max-width: 960px;
-  margin: 0 auto;
-  padding: 2rem 1rem;
-  text-align: center;
+h1,
+h2,
+h3 {
+  line-height: 1.2;
+  margin: 0 0 var(--space-4);
+}
+
+h1 {
+  font-size: var(--font-size-2xl);
+}
+
+h2 {
+  font-size: var(--font-size-xl);
+}
+
+p {
+  margin: 0 0 var(--space-4);
+}
+
+/* A clear, high-contrast focus ring for keyboard users */
+:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 3px;
+}
+
+/* <main> receives focus from the skip link; no ring needed there */
+main:focus {
+  outline: none;
+}
+
+@media (max-width: 480px) {
+  :root {
+    --font-size-xl: 1.625rem;
+    --font-size-2xl: 2rem;
+  }
 }
