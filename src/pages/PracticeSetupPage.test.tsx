@@ -58,7 +58,7 @@ describe('PracticeSetupPage', () => {
     await user.click(advanced);
     expect(advanced).toBeChecked();
     expect(screen.getByRole('radio', { name: 'Beginner' })).not.toBeChecked();
-    expect(advanced).toHaveAccessibleDescription(/times tables to 12/i);
+    expect(advanced).toHaveAccessibleDescription(/numbers up to 1,000/i);
   });
 
   it('can be used with the keyboard', async () => {
@@ -80,9 +80,11 @@ describe('PracticeSetupPage', () => {
     await user.click(startButton());
 
     expect(screen.getByRole('heading', { level: 1, name: 'Practice Session' })).toBeInTheDocument();
-    expect(screen.getByText('Addition and Subtraction')).toBeInTheDocument();
-    expect(screen.getByText('Intermediate')).toBeInTheDocument();
-    expect(screen.getByText('Keep going')).toBeInTheDocument();
+    // "Keep going" shows no total
+    expect(screen.getByText('Question 1')).toBeInTheDocument();
+    // Only addition or subtraction, at intermediate level (numbers 10–100)
+    const problem = screen.getByRole('heading', { level: 2, name: /^What is/ });
+    expect(problem.textContent).toMatch(/^\d+ [+−] \d+ = \?$/);
   });
 });
 

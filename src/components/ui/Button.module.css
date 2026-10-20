@@ -48,6 +48,29 @@
   background-color: var(--color-secondary-hover);
 }
 
+/* "I got it right" / "I got it wrong". Always paired with an icon and text. */
+.positive {
+  background-color: var(--color-positive);
+  border-color: var(--color-positive-border);
+  box-shadow: 0 3px 0 var(--color-positive-border);
+  color: var(--color-primary-text);
+}
+
+.positive:hover:not(:disabled) {
+  background-color: var(--color-positive-hover);
+}
+
+.negative {
+  background-color: var(--color-negative);
+  border-color: var(--color-negative-border);
+  box-shadow: 0 3px 0 var(--color-negative-border);
+  color: var(--color-primary-text);
+}
+
+.negative:hover:not(:disabled) {
+  background-color: var(--color-negative-hover);
+}
+
 .fullWidth {
   width: 100%;
 }

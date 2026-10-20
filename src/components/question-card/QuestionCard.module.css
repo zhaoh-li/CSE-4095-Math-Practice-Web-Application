@@ -1,0 +1,249 @@
+/* ---------- Card and flip ---------- */
+
+.scene {
+  width: 100%;
+  max-width: 38rem;
+  margin: 0 auto;
+  perspective: 1400px;
+}
+
+/* Both faces sit in the same grid cell, so the card is as tall as the taller face */
+.card {
+  display: grid;
+}
+
+.face {
+  grid-area: 1 / 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-8) var(--space-6);
+  border: 3px solid var(--color-border-soft);
+  border-radius: calc(var(--radius) * 1.75);
+  box-shadow: 0 8px 24px rgba(30, 42, 74, 0.14);
+  text-align: center;
+}
+
+.front {
+  background-color: var(--color-surface);
+}
+
+.back {
+  background-color: var(--color-card-back);
+  border-color: var(--color-primary);
+  justify-content: center;
+}
+
+/* 3D flip: the card turns over; each face hides its reverse side */
+.animated {
+  transform-style: preserve-3d;
+  transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
+}
+
+.animated .face {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* The back starts turned around, so it reads correctly once the card flips */
+.animated .back {
+  transform: rotateY(180deg);
+}
+
+.animated.flipped {
+  transform: rotateY(180deg);
+}
+
+/* No animation: simply show one face at a time */
+.static .face[inert] {
+  visibility: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animated {
+    transition: none;
+  }
+}
+
+/* ---------- Front ---------- */
+
+.progress {
+  width: fit-content;
+  margin: 0 auto var(--space-3);
+  padding: var(--space-1) var(--space-4);
+  border: 2px solid var(--color-border-soft);
+  border-radius: 999px;
+  background-color: var(--color-surface);
+  font-weight: 700;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+.problem {
+  margin: var(--space-2) 0;
+  font-size: clamp(2.5rem, 9vw, 4rem);
+  color: var(--color-text);
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+.problem:focus,
+.backTitle:focus {
+  outline: none;
+}
+
+.choices {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-3);
+  width: 100%;
+}
+
+.hint {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+
+/* ---------- Answer choice buttons ---------- */
+
+.choice {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 4.5rem;
+  padding: var(--space-3) var(--space-8);
+  border: 3px solid var(--color-border);
+  border-radius: var(--radius);
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.choice:hover:not(:disabled) {
+  background-color: var(--color-secondary-hover);
+  border-color: var(--color-primary-border);
+}
+
+.choice:disabled {
+  cursor: default;
+}
+
+/* Selected: tinted, thicker blue border, and a check mark — not color alone */
+.choiceSelected {
+  border-color: var(--color-selected-border);
+  background-color: var(--color-selected-bg);
+  box-shadow: inset 0 0 0 2px var(--color-selected-border);
+}
+
+.choiceSelected:hover:not(:disabled) {
+  background-color: var(--color-selected-bg);
+}
+
+.choiceNumber {
+  position: absolute;
+  top: var(--space-2);
+  left: var(--space-2);
+  display: grid;
+  place-items: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  background-color: var(--color-bg);
+  font-size: 0.875rem;
+  font-weight: 800;
+  color: var(--color-text-muted);
+}
+
+.choiceValue {
+  font-family: var(--font-heading);
+  font-size: clamp(1.75rem, 6vw, 2.25rem);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.choiceCheck {
+  position: absolute;
+  top: var(--space-2);
+  right: var(--space-2);
+  display: grid;
+  place-items: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  font-size: 0.875rem;
+  font-weight: 900;
+  color: transparent;
+}
+
+.choiceSelected .choiceCheck {
+  background-color: var(--color-selected-border);
+  color: #ffffff;
+}
+
+/* ---------- Back ---------- */
+
+.backTitle {
+  margin: 0;
+  font-size: clamp(2rem, 7vw, 3rem);
+  color: var(--color-text);
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+.answer {
+  display: inline-block;
+  padding: 0 var(--space-3);
+  border: 3px solid var(--color-primary-border);
+  border-radius: var(--radius);
+  background-color: var(--color-surface);
+  color: var(--color-heading);
+}
+
+.yourAnswer {
+  margin: 0;
+  font-size: var(--font-size-lg);
+}
+
+.ask {
+  margin: var(--space-2) 0 0;
+  font-family: var(--font-heading);
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  color: var(--color-heading);
+}
+
+.resultButtons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-3);
+  width: 100%;
+}
+
+.resultButtons > * {
+  flex: 1 1 12rem;
+}
+
+@media (max-width: 480px) {
+  .face {
+    padding: var(--space-6) var(--space-4);
+  }
+
+  .choice {
+    min-height: 4rem;
+    padding: var(--space-3) var(--space-6);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .choice {
+    transition: none;
+  }
+}
