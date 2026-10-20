@@ -18,19 +18,27 @@ export interface DifficultyInfo {
   description: string;
 }
 
-// Descriptions are kid-facing. The exact number ranges are set in Phase 4.
+// Kid-facing summaries of the number ranges in config/difficultyRules.ts.
 export const DIFFICULTY_INFO: Record<DifficultyLevel, DifficultyInfo> = {
-  beginner: { level: 1, label: 'Beginner', description: 'Small numbers up to 10.' },
-  easy: { level: 2, label: 'Easy', description: 'Numbers up to 20.' },
+  beginner: {
+    level: 1,
+    label: 'Beginner',
+    description: 'Numbers up to 10. Times tables up to 5.',
+  },
+  easy: {
+    level: 2,
+    label: 'Easy',
+    description: 'Numbers up to 20. Times tables up to 10.',
+  },
   intermediate: {
     level: 3,
     label: 'Intermediate',
-    description: 'Numbers up to 100 and times tables to 10.',
+    description: 'Numbers up to 100. Times tables up to 12.',
   },
   advanced: {
     level: 4,
     label: 'Advanced',
-    description: 'Bigger numbers and times tables to 12.',
+    description: 'Numbers up to 1,000. Bigger times tables.',
   },
 };
 

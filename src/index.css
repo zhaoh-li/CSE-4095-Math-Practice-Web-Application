@@ -34,6 +34,17 @@
   --color-selected-bg: #d6ecfb;
   --color-selected-border: #1f6fb2;
 
+  /* Flash card */
+  --color-card-back: #eef7ff;
+
+  /* Self-report buttons (always shown with ✓ / ✗ and words, never color alone) */
+  --color-positive: #9bdc9f;
+  --color-positive-hover: #b5e6b8;
+  --color-positive-border: #2e7d32;
+  --color-negative: #f7b2c1;
+  --color-negative-hover: #fac7d2;
+  --color-negative-border: #b4234a;
+
   /* Feedback */
   --color-error: #b42318;
   --color-error-bg: #fdecea;
