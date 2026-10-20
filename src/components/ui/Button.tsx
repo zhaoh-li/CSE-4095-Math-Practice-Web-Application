@@ -2,7 +2,7 @@ import type { ComponentProps } from 'react';
 import { Link, type LinkProps } from 'react-router';
 import styles from './Button.module.css';
 
-type ButtonVariant = 'primary' | 'secondary' | 'positive' | 'negative';
+type ButtonVariant = 'primary' | 'secondary' | 'positive' | 'negative' | 'danger';
 
 interface StyleOptions {
   variant?: ButtonVariant;

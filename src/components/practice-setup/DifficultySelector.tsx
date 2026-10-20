@@ -4,17 +4,23 @@ import { DIFFICULTY_LEVELS, type DifficultyLevel } from '../../types';
 import styles from './OptionCards.module.css';
 
 interface DifficultySelectorProps {
+  /** Heading for the group. */
+  legend?: string;
   selected: DifficultyLevel;
   onChange: (difficulty: DifficultyLevel) => void;
 }
 
 /** Radio cards for picking exactly one difficulty level. */
-export function DifficultySelector({ selected, onChange }: DifficultySelectorProps) {
+export function DifficultySelector({
+  selected,
+  onChange,
+  legend = '2. Choose a level',
+}: DifficultySelectorProps) {
   const groupId = useId();
 
   return (
     <fieldset className={styles.fieldset}>
-      <legend className={styles.legend}>2. Choose a level</legend>
+      <legend className={styles.legend}>{legend}</legend>
       <div className={`${styles.grid} ${styles.cols2}`}>
         {DIFFICULTY_LEVELS.map((difficulty) => {
           const info = DIFFICULTY_INFO[difficulty];

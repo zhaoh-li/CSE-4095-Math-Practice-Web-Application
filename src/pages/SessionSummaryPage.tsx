@@ -1,10 +1,11 @@
 import { useLocation, useNavigate } from 'react-router';
+import { StatTiles } from '../components/stats/StatTiles';
 import { Button, ButtonLink } from '../components/ui/Button';
 import { DIFFICULTY_INFO, SESSION_LENGTH_OPTIONS } from '../config/practiceOptions';
 import type { PracticeSession } from '../types';
 import { describeOperations } from '../utils/practiceConfig';
 import { configFromSession, isCompletedSession } from '../utils/session/practiceSession';
-import { calculateAccuracy } from '../utils/statistics';
+import { calculateAccuracy, totalsFromCounts } from '../utils/statistics';
 import styles from './SessionSummaryPage.module.css';
 
 /** Encouraging, never shaming. */
@@ -54,30 +55,10 @@ function SessionSummary({ session }: { session: PracticeSession }) {
         <p className={styles.message}>{cheer.message}</p>
       </header>
 
-      <ul className={styles.stats} aria-label="Your results">
-        <li className={styles.stat}>
-          <span className={styles.statValue}>{session.attemptedCount}</span>
-          <span className={styles.statLabel}>Questions</span>
-        </li>
-        <li className={`${styles.stat} ${styles.statCorrect}`}>
-          <span className={styles.statValue}>
-            <span aria-hidden="true">✓ </span>
-            {session.correctCount}
-          </span>
-          <span className={styles.statLabel}>Correct</span>
-        </li>
-        <li className={`${styles.stat} ${styles.statIncorrect}`}>
-          <span className={styles.statValue}>
-            <span aria-hidden="true">✗ </span>
-            {session.incorrectCount}
-          </span>
-          <span className={styles.statLabel}>Incorrect</span>
-        </li>
-        <li className={styles.stat}>
-          <span className={styles.statValue}>{accuracy}%</span>
-          <span className={styles.statLabel}>Accuracy</span>
-        </li>
-      </ul>
+      <StatTiles
+        label="Your results"
+        totals={totalsFromCounts(session.correctCount, session.incorrectCount)}
+      />
 
       <dl className={styles.details}>
         <div>

@@ -1,5 +1,10 @@
 import { OPERATION_INFO, SESSION_LENGTH_OPTIONS } from '../config/practiceOptions';
-import { DIFFICULTY_LEVELS, MATH_OPERATIONS, type PracticeConfig } from '../types';
+import {
+  DIFFICULTY_LEVELS,
+  MATH_OPERATIONS,
+  type AppSettings,
+  type PracticeConfig,
+} from '../types';
 
 /** Checks that unknown data (e.g. router state) is a usable practice config. */
 export function isPracticeConfig(value: unknown): value is PracticeConfig {
@@ -23,4 +28,14 @@ export function describeOperations(config: PracticeConfig): string {
   );
   if (labels.length <= 1) return labels.join('');
   return `${labels.slice(0, -1).join(', ')} and ${labels[labels.length - 1]}`;
+}
+
+/** The practice setup to start from, based on the saved default settings. */
+export function configFromSettings(settings: AppSettings): PracticeConfig {
+  return {
+    mode: 'regular',
+    operations: [...settings.defaultOperations],
+    difficulty: settings.defaultDifficulty,
+    sessionLength: settings.defaultSessionLength,
+  };
 }

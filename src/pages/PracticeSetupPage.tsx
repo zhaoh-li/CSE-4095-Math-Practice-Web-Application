@@ -4,9 +4,9 @@ import { DifficultySelector } from '../components/practice-setup/DifficultySelec
 import { OperationSelector } from '../components/practice-setup/OperationSelector';
 import { SessionLengthSelector } from '../components/practice-setup/SessionLengthSelector';
 import { Button } from '../components/ui/Button';
-import { DEFAULT_PRACTICE_CONFIG } from '../config/practiceOptions';
 import type { PracticeConfig } from '../types';
-import { isPracticeConfig } from '../utils/practiceConfig';
+import { useSettings } from '../context/SettingsContext';
+import { configFromSettings, isPracticeConfig } from '../utils/practiceConfig';
 import styles from './PracticeSetupPage.module.css';
 
 export function PracticeSetupPage() {
@@ -14,9 +14,11 @@ export function PracticeSetupPage() {
   const location = useLocation();
   const routeState = location.state as { config?: unknown; notice?: unknown } | null;
   const notice = typeof routeState?.notice === 'string' ? routeState.notice : null;
-  // Coming back from a session ("Change Settings") keeps the previous choices
+  const { settings } = useSettings();
+  // Coming back from a session ("Change Settings") keeps the previous choices;
+  // otherwise start from the defaults chosen on the Settings page
   const [config, setConfig] = useState<PracticeConfig>(() =>
-    isPracticeConfig(routeState?.config) ? routeState.config : DEFAULT_PRACTICE_CONFIG,
+    isPracticeConfig(routeState?.config) ? routeState.config : configFromSettings(settings),
   );
   const hasOperation = config.operations.length > 0;
 

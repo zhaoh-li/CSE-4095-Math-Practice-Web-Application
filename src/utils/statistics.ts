@@ -1,5 +1,86 @@
+import {
+  DIFFICULTY_LEVELS,
+  MATH_OPERATIONS,
+  type AppStatistics,
+  type DifficultyStatistics,
+  type OperationStatistics,
+  type PerformanceTotals,
+  type PracticeAttempt,
+  type PracticeSession,
+  type RecentSessionSummary,
+} from '../types';
+
 /** Percentage of correct answers, rounded to a whole number. 0 when nothing was attempted. */
 export function calculateAccuracy(correct: number, attempted: number): number {
   if (attempted <= 0) return 0;
   return Math.round((correct / attempted) * 100);
+}
+
+export function totalsFromCounts(correct: number, incorrect: number): PerformanceTotals {
+  const attempted = correct + incorrect;
+  return { attempted, correct, incorrect, accuracy: calculateAccuracy(correct, attempted) };
+}
+
+/** Attempted, correct, incorrect, and accuracy for a list of attempts. */
+export function calculateTotals(attempts: readonly PracticeAttempt[]): PerformanceTotals {
+  const correct = attempts.filter((a) => a.result === 'correct').length;
+  return totalsFromCounts(correct, attempts.length - correct);
+}
+
+/** Totals for each operation. Every operation is included, even with no attempts. */
+export function statisticsByOperation(attempts: readonly PracticeAttempt[]): OperationStatistics {
+  return Object.fromEntries(
+    MATH_OPERATIONS.map((op) => [op, calculateTotals(attempts.filter((a) => a.operation === op))]),
+  ) as OperationStatistics;
+}
+
+/** Totals for each difficulty level. Every level is included, even with no attempts. */
+export function statisticsByDifficulty(attempts: readonly PracticeAttempt[]): DifficultyStatistics {
+  return Object.fromEntries(
+    DIFFICULTY_LEVELS.map((level) => [
+      level,
+      calculateTotals(attempts.filter((a) => a.difficulty === level)),
+    ]),
+  ) as DifficultyStatistics;
+}
+
+export function summarizeSession(session: PracticeSession): RecentSessionSummary {
+  return {
+    sessionId: session.id,
+    completedAt: session.completedAt ?? session.startedAt,
+    operations: [...session.operations],
+    difficulty: session.difficulty,
+    sessionLength: session.sessionLength,
+    totals: totalsFromCounts(session.correctCount, session.incorrectCount),
+  };
+}
+
+/**
+ * All statistics for the Statistics page.
+ * Sessions with no answers are left out of the recent list.
+ */
+export function calculateAppStatistics(
+  attempts: readonly PracticeAttempt[],
+  sessions: readonly PracticeSession[],
+  recentLimit = 10,
+): AppStatistics {
+  const recentSessions = sessions
+    .filter((s) => s.attemptedCount > 0)
+    .map(summarizeSession)
+    .sort((a, b) => b.completedAt.localeCompare(a.completedAt))
+    .slice(0, recentLimit);
+
+  return {
+    overall: calculateTotals(attempts),
+    byOperation: statisticsByOperation(attempts),
+    byDifficulty: statisticsByDifficulty(attempts),
+    recentSessions,
+    // Filled in by mistake tracking (Phases 12–15)
+    mistakes: {
+      activePatterns: 0,
+      masteredPatterns: 0,
+      similarQuestionsPracticed: 0,
+      reviewQuestionsCorrect: 0,
+    },
+  };
 }

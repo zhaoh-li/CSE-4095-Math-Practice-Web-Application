@@ -3,6 +3,7 @@ import { Navigate, useLocation, useNavigate } from 'react-router';
 import { QuestionCard } from '../components/question-card/QuestionCard';
 import { EndSessionControl } from '../components/session/EndSessionControl';
 import { SessionProgress } from '../components/session/SessionProgress';
+import { useSettings } from '../context/SettingsContext';
 import { usePracticeSession } from '../hooks/usePracticeSession';
 import type { PracticeConfig } from '../types';
 import { isPracticeConfig } from '../utils/practiceConfig';
@@ -23,6 +24,7 @@ export function PracticeSessionPage() {
 
 function PracticeRunner({ config }: { config: PracticeConfig }) {
   const navigate = useNavigate();
+  const { settings } = useSettings();
   const { session, currentQuestion, recordResult, endSession } = usePracticeSession(config);
 
   const totalQuestions = session.sessionLength === 'continuous' ? null : session.sessionLength;
@@ -58,6 +60,7 @@ function PracticeRunner({ config }: { config: PracticeConfig }) {
         key={currentQuestion.id}
         question={currentQuestion}
         onResult={recordResult}
+        animationsEnabled={settings.cardAnimationsEnabled}
         autoFocus={session.currentQuestionIndex > 0}
       />
       <EndSessionControl needsConfirmation={session.attemptedCount > 0} onEnd={handleEnd} />
