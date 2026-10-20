@@ -47,8 +47,8 @@ describe('App routing', () => {
 
   it.each([
     ['/practice/setup', 'Set Up Your Practice'],
-    ['/practice/session', 'Practice Session'],
-    ['/practice/summary', 'Session Summary'],
+    ['/practice/session', 'Set Up Your Practice'], // redirects without setup
+    ['/practice/summary', 'No Results Yet'],
     ['/statistics', 'Statistics'],
     ['/settings', 'Settings'],
   ])('renders %s', (path, title) => {

@@ -1,4 +1,4 @@
-import type { ButtonHTMLAttributes } from 'react';
+import type { ComponentProps } from 'react';
 import { Link, type LinkProps } from 'react-router';
 import styles from './Button.module.css';
 
@@ -16,7 +16,8 @@ function buttonClassName({ variant = 'primary', fullWidth, className }: StyleOpt
     .join(' ');
 }
 
-type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & StyleOptions;
+// ComponentProps<'button'> includes `ref`, which React 19 passes like any other prop
+type ButtonProps = ComponentProps<'button'> & StyleOptions;
 
 /** A styled <button> for actions on the current page. */
 export function Button({ variant, fullWidth, className, type = 'button', ...rest }: ButtonProps) {

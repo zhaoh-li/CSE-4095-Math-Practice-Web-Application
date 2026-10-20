@@ -11,11 +11,8 @@ import styles from './QuestionCard.module.css';
 
 export interface QuestionCardProps {
   question: Question;
-  questionNumber: number;
-  /** Total questions in the session, or null for continuous practice. */
-  totalQuestions: number | null;
   onResult: (result: SelfReportedResult, selectedAnswer: number) => void;
-  /** Turns the 3D flip on or off. Reduced-motion users never see it either way. */
+  /** Turns the flip and slide-in animations on or off. Reduced-motion users never see them. */
   animationsEnabled?: boolean;
   /** Move keyboard focus to the question when the card appears. */
   autoFocus?: boolean;
@@ -29,8 +26,6 @@ export interface QuestionCardProps {
  */
 export function QuestionCard({
   question,
-  questionNumber,
-  totalQuestions,
   onResult,
   animationsEnabled = true,
   autoFocus = false,
@@ -53,10 +48,6 @@ export function QuestionCard({
 
   const questionText = formatQuestionText(question);
   const spokenQuestion = formatSpokenQuestion(question);
-  const progressText =
-    totalQuestions === null
-      ? `Question ${questionNumber}`
-      : `Question ${questionNumber} of ${totalQuestions}`;
 
   function handleFlip() {
     if (selectedAnswer === null) return;
@@ -76,8 +67,7 @@ export function QuestionCard({
   ].join(' ');
 
   return (
-    <div className={styles.scene}>
-      <p className={styles.progress}>{progressText}</p>
+    <div className={`${styles.scene} ${animationsEnabled ? styles.enter : ''}`}>
       <div className={cardClassName} data-flipped={isCardFlipped}>
         {/* Front */}
         <section

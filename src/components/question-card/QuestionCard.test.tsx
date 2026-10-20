@@ -18,15 +18,7 @@ const question: Question = {
 function renderCard(props: Partial<QuestionCardProps> = {}) {
   const user = userEvent.setup();
   const onResult = vi.fn();
-  const utils = render(
-    <QuestionCard
-      question={question}
-      questionNumber={3}
-      totalQuestions={10}
-      onResult={onResult}
-      {...props}
-    />,
-  );
+  const utils = render(<QuestionCard question={question} onResult={onResult} {...props} />);
   return { user, onResult, ...utils };
 }
 
@@ -37,9 +29,8 @@ const choice = (value: number) => screen.getByRole('button', { name: new RegExp(
 const flipButton = () => screen.getByRole('button', { name: 'Flip Card' });
 
 describe('QuestionCard front', () => {
-  it('shows the question, its number, the total, and four choices', () => {
+  it('shows the question and four choices', () => {
     renderCard();
-    expect(screen.getByText('Question 3 of 10')).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'What is 7 times 8?' })).toHaveTextContent(
       '7 × 8 = ?',
     );
@@ -47,11 +38,6 @@ describe('QuestionCard front', () => {
       'button',
     );
     expect(choices.map((c) => c.textContent)).toEqual(['154✓', '256✓', '363✓', '448✓']);
-  });
-
-  it('shows only the question number in continuous practice', () => {
-    renderCard({ totalQuestions: null, questionNumber: 12 });
-    expect(screen.getByText('Question 12')).toBeInTheDocument();
   });
 
   it('gives each choice an accessible label', () => {
@@ -169,17 +155,8 @@ describe('QuestionCard reset', () => {
       correctAnswer: 48,
       choices: [42, 48, 54, 56],
     };
-    rerender(
-      <QuestionCard
-        key={next.id}
-        question={next}
-        questionNumber={4}
-        totalQuestions={10}
-        onResult={vi.fn()}
-      />,
-    );
+    rerender(<QuestionCard key={next.id} question={next} onResult={vi.fn()} />);
 
-    expect(screen.getByText('Question 4 of 10')).toBeInTheDocument();
     expect(back()).toHaveAttribute('aria-hidden', 'true');
     expect(flipButton()).toBeDisabled();
     for (const button of within(front()).getAllByRole('button', { name: /^Choice/ })) {

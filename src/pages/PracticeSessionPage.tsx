@@ -1,83 +1,66 @@
-import { useState } from 'react';
-import { useLocation } from 'react-router';
+import { useEffect } from 'react';
+import { Navigate, useLocation, useNavigate } from 'react-router';
 import { QuestionCard } from '../components/question-card/QuestionCard';
-import { ButtonLink, Button } from '../components/ui/Button';
-import type { PracticeConfig, Question } from '../types';
+import { EndSessionControl } from '../components/session/EndSessionControl';
+import { SessionProgress } from '../components/session/SessionProgress';
+import { usePracticeSession } from '../hooks/usePracticeSession';
+import type { PracticeConfig } from '../types';
 import { isPracticeConfig } from '../utils/practiceConfig';
-import { generateQuestion } from '../utils/questions/generateQuestion';
-import styles from './PracticeSessionPage.module.css';
+
+export const MISSING_SETUP_NOTICE = "Let's choose what to practice first!";
 
 export function PracticeSessionPage() {
   const location = useLocation();
   const config = (location.state as { config?: unknown } | null)?.config;
 
   if (!isPracticeConfig(config)) {
-    return (
-      <section>
-        <h1>Practice Session</h1>
-        <p>Let's choose what to practice first.</p>
-        <ButtonLink to="/practice/setup">Go to Practice Setup</ButtonLink>
-      </section>
-    );
+    return <Navigate to="/practice/setup" replace state={{ notice: MISSING_SETUP_NOTICE }} />;
   }
 
-  return <PracticeRunner config={config} />;
+  // A new location key (e.g. "Practice Again") starts a brand-new session
+  return <PracticeRunner key={location.key} config={config} />;
 }
 
-/**
- * Milestone 1 version: shows one card after another.
- * Phase 7 adds result tracking, progress, and the session summary.
- */
 function PracticeRunner({ config }: { config: PracticeConfig }) {
-  const [question, setQuestion] = useState<Question>(() => generateQuestion(config));
-  const [questionNumber, setQuestionNumber] = useState(1);
-  const [isFinished, setIsFinished] = useState(false);
+  const navigate = useNavigate();
+  const { session, currentQuestion, recordResult, endSession } = usePracticeSession(config);
 
-  const totalQuestions = config.sessionLength === 'continuous' ? null : config.sessionLength;
+  const totalQuestions = session.sessionLength === 'continuous' ? null : session.sessionLength;
 
-  function handleResult() {
-    if (totalQuestions !== null && questionNumber >= totalQuestions) {
-      setIsFinished(true);
+  // When the session finishes, show the summary. Replace so Back goes to setup.
+  useEffect(() => {
+    if (!session.isActive) {
+      navigate('/practice/summary', { replace: true, state: { session } });
+    }
+  }, [session, navigate]);
+
+  function handleEnd() {
+    if (session.attemptedCount === 0) {
+      navigate('/practice/setup', { state: { config } });
       return;
     }
-    setQuestion(generateQuestion({ ...config, avoid: question }));
-    setQuestionNumber((n) => n + 1);
+    endSession();
   }
 
-  function restart() {
-    setQuestion(generateQuestion(config));
-    setQuestionNumber(1);
-    setIsFinished(false);
-  }
-
-  if (isFinished) {
-    return (
-      <section className={styles.done}>
-        <h1>Great job!</h1>
-        <p>You finished all {totalQuestions} questions.</p>
-        <div className={styles.actions}>
-          <Button onClick={restart}>Practice Again</Button>
-          <ButtonLink to="/practice/setup" variant="secondary">
-            Change Settings
-          </ButtonLink>
-        </div>
-      </section>
-    );
-  }
+  if (!session.isActive) return null;
 
   return (
     <section aria-labelledby="session-title">
       <h1 id="session-title" className="visually-hidden">
         Practice Session
       </h1>
-      <QuestionCard
-        key={question.id}
-        question={question}
-        questionNumber={questionNumber}
+      <SessionProgress
+        questionNumber={session.currentQuestionIndex + 1}
+        answeredCount={session.attemptedCount}
         totalQuestions={totalQuestions}
-        onResult={handleResult}
-        autoFocus={questionNumber > 1}
       />
+      <QuestionCard
+        key={currentQuestion.id}
+        question={currentQuestion}
+        onResult={recordResult}
+        autoFocus={session.currentQuestionIndex > 0}
+      />
+      <EndSessionControl needsConfirmation={session.attemptedCount > 0} onEnd={handleEnd} />
     </section>
   );
 }
