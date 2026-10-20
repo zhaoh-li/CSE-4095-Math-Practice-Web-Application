@@ -5,6 +5,7 @@ import { NotFoundPage } from './pages/NotFoundPage';
 import { PlaceholderPage } from './pages/PlaceholderPage';
 import { PracticeSessionPage } from './pages/PracticeSessionPage';
 import { PracticeSetupPage } from './pages/PracticeSetupPage';
+import { SessionSummaryPage } from './pages/SessionSummaryPage';
 
 export function AppRoutes() {
   return (
@@ -14,15 +15,7 @@ export function AppRoutes() {
         <Route path="practice">
           <Route path="setup" element={<PracticeSetupPage />} />
           <Route path="session" element={<PracticeSessionPage />} />
-          <Route
-            path="summary"
-            element={
-              <PlaceholderPage
-                title="Session Summary"
-                description="Your session results will appear here."
-              />
-            }
-          />
+          <Route path="summary" element={<SessionSummaryPage />} />
         </Route>
         <Route
           path="statistics"

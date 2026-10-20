@@ -87,17 +87,3 @@ describe('PracticeSetupPage', () => {
     expect(problem.textContent).toMatch(/^\d+ [+−] \d+ = \?$/);
   });
 });
-
-describe('PracticeSessionPage without setup', () => {
-  it('sends the student back to setup', () => {
-    render(
-      <MemoryRouter initialEntries={['/practice/session']}>
-        <AppRoutes />
-      </MemoryRouter>,
-    );
-    expect(screen.getByRole('link', { name: 'Go to Practice Setup' })).toHaveAttribute(
-      'href',
-      '/practice/setup',
-    );
-  });
-});

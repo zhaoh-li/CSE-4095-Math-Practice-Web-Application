@@ -55,6 +55,22 @@
   transform: rotateY(180deg);
 }
 
+/* A new card slides up and fades in */
+.enter {
+  animation: card-enter 0.35s ease-out;
+}
+
+@keyframes card-enter {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
 /* No animation: simply show one face at a time */
 .static .face[inert] {
   visibility: hidden;
@@ -64,21 +80,13 @@
   .animated {
     transition: none;
   }
+
+  .enter {
+    animation: none;
+  }
 }
 
 /* ---------- Front ---------- */
-
-.progress {
-  width: fit-content;
-  margin: 0 auto var(--space-3);
-  padding: var(--space-1) var(--space-4);
-  border: 2px solid var(--color-border-soft);
-  border-radius: 999px;
-  background-color: var(--color-surface);
-  font-weight: 700;
-  font-size: var(--font-size-sm);
-  color: var(--color-text-muted);
-}
 
 .problem {
   margin: var(--space-2) 0;
