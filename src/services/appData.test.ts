@@ -281,3 +281,53 @@ describe('migrateStorage', () => {
     expect(backend.getItem('otherApp:settings')).toBe('keep');
   });
 });
+
+describe('mistake patterns', () => {
+  const pattern = (id: string, extra: Record<string, unknown> = {}) => ({
+    id,
+    operation: 'division',
+    firstOperand: 24,
+    secondOperand: 6,
+    correctAnswer: 4,
+    difficulty: 'easy',
+    incorrectCount: 2,
+    similarCorrectCount: 1,
+    isMastered: false,
+    createdAt: '2026-10-20T12:00:00.000Z',
+    lastIncorrectAt: '2026-10-20T12:00:00.000Z',
+    ...extra,
+  });
+
+  it('saves and loads mistake patterns', () => {
+    const { data } = setup();
+    data.saveMistakePatterns([pattern('m1') as never]);
+    expect(data.loadMistakePatterns()).toEqual([pattern('m1')]);
+  });
+
+  it('loads them again after a "browser restart"', () => {
+    const { backend, data } = setup();
+    data.saveMistakePatterns([pattern('m1') as never]);
+    expect(createAppData(createStorageService(backend)).loadMistakePatterns()).toHaveLength(1);
+  });
+
+  it('drops invalid records and keeps the valid ones', () => {
+    const { backend, data } = setup();
+    backend.setItem(
+      `${STORAGE_PREFIX}mistakePatterns`,
+      JSON.stringify([
+        pattern('good'),
+        pattern('bad-count', { incorrectCount: 0 }),
+        pattern('bad-op', { operation: 'modulo' }),
+        { id: 'partial' },
+      ]),
+    );
+    expect(data.loadMistakePatterns().map((p) => p.id)).toEqual(['good']);
+  });
+
+  it('resetStatistics clears mistakes too', () => {
+    const { data } = setup();
+    data.saveMistakePatterns([pattern('m1') as never]);
+    data.resetStatistics();
+    expect(data.loadMistakePatterns()).toEqual([]);
+  });
+});

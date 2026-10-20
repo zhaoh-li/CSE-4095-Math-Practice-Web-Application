@@ -2,7 +2,10 @@ import type { PracticeAttempt, PracticeSession } from '../types';
 import {
   calculateAccuracy,
   calculateAppStatistics,
+  calculateMistakeStatistics,
   calculateTotals,
+  mostMissedOperations,
+  sortByMostMissed,
   statisticsByDifficulty,
   statisticsByOperation,
 } from './statistics';
@@ -152,6 +155,93 @@ describe('calculateAppStatistics', () => {
     const sessions = Array.from({ length: 15 }, (_, i) =>
       session(`s${i}`, `2026-10-${String(i + 1).padStart(2, '0')}T10:00:00.000Z`, 1, 0),
     );
-    expect(calculateAppStatistics([], sessions, 10).recentSessions).toHaveLength(10);
+    expect(calculateAppStatistics([], sessions, [], 10).recentSessions).toHaveLength(10);
+  });
+});
+
+describe('mistake statistics', () => {
+  const pattern = (id: string, extra: Partial<import('../types').MistakePattern> = {}) => ({
+    id,
+    operation: 'addition' as const,
+    firstOperand: 2,
+    secondOperand: 3,
+    correctAnswer: 5,
+    difficulty: 'beginner' as const,
+    incorrectCount: 1,
+    similarCorrectCount: 0,
+    isMastered: false,
+    createdAt: '2026-10-01T10:00:00.000Z',
+    lastIncorrectAt: '2026-10-01T10:00:00.000Z',
+    ...extra,
+  });
+
+  it('counts active and mastered patterns, and review answers', () => {
+    const stats = calculateMistakeStatistics(
+      [pattern('a'), pattern('b'), pattern('c', { isMastered: true })],
+      [
+        attempt({ source: 'mistake-review', result: 'correct' }),
+        attempt({ source: 'mistake-review', result: 'correct' }),
+        attempt({ source: 'mistake-review', result: 'incorrect' }),
+        attempt({ source: 'regular', result: 'correct' }),
+      ],
+    );
+    expect(stats).toEqual({
+      activePatterns: 2,
+      masteredPatterns: 1,
+      similarQuestionsPracticed: 3,
+      reviewQuestionsCorrect: 2,
+    });
+  });
+
+  it('finds the most missed operation', () => {
+    const result = mostMissedOperations([
+      attempt({ operation: 'multiplication', result: 'incorrect' }),
+      attempt({ operation: 'multiplication', result: 'incorrect' }),
+      attempt({ operation: 'addition', result: 'incorrect' }),
+      attempt({ operation: 'addition', result: 'correct' }),
+    ]);
+    expect(result).toEqual({ operations: ['multiplication'], count: 2 });
+  });
+
+  it('reports every operation in a tie, in + − × ÷ order', () => {
+    const result = mostMissedOperations([
+      attempt({ operation: 'division', result: 'incorrect' }),
+      attempt({ operation: 'addition', result: 'incorrect' }),
+    ]);
+    expect(result).toEqual({ operations: ['addition', 'division'], count: 1 });
+  });
+
+  it('returns null when nothing was missed', () => {
+    expect(mostMissedOperations([attempt({ result: 'correct' })])).toBeNull();
+    expect(mostMissedOperations([])).toBeNull();
+  });
+
+  it('sorts by most missed, breaking ties by most recent, then by id', () => {
+    const sorted = sortByMostMissed([
+      pattern('few', { incorrectCount: 1 }),
+      pattern('tie-old', { incorrectCount: 4, lastIncorrectAt: '2026-10-01T10:00:00.000Z' }),
+      pattern('many', { incorrectCount: 7 }),
+      pattern('tie-new', { incorrectCount: 4, lastIncorrectAt: '2026-10-15T10:00:00.000Z' }),
+      pattern('tie-same-b', { incorrectCount: 2 }),
+      pattern('tie-same-a', { incorrectCount: 2 }),
+    ]);
+    expect(sorted.map((p) => p.id)).toEqual([
+      'many',
+      'tie-new',
+      'tie-old',
+      'tie-same-a',
+      'tie-same-b',
+      'few',
+    ]);
+  });
+
+  it('includes mistake totals in the app statistics', () => {
+    const stats = calculateAppStatistics(
+      [],
+      [],
+      [pattern('a'), pattern('b', { isMastered: true })],
+    );
+    expect(stats.mistakes.activePatterns).toBe(1);
+    expect(stats.mistakes.masteredPatterns).toBe(1);
   });
 });

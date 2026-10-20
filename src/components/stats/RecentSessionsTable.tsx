@@ -41,7 +41,11 @@ export function RecentSessionsTable({ sessions }: RecentSessionsTableProps) {
                   {session.operations.map((op) => OPERATION_INFO[op].label).join(', ')}
                 </span>
               </td>
-              <td>{DIFFICULTY_INFO[session.difficulty].label}</td>
+              <td>
+                {session.mode === 'mistake-review'
+                  ? 'Mistake review'
+                  : DIFFICULTY_INFO[session.difficulty].label}
+              </td>
               <td>{session.totals.attempted}</td>
               <td>{session.totals.correct}</td>
               <td>{session.totals.incorrect}</td>

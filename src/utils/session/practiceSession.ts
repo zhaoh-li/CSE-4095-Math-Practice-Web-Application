@@ -19,8 +19,12 @@ export type SessionAction =
   | {
       type: 'recordAttempt';
       attempt: PracticeAttempt;
-      /** The question to show next. Ignored when this attempt completes the session. */
-      nextQuestion: Question;
+      /**
+       * The question to show next. Ignored when this attempt completes the session.
+       * null means there is nothing left to ask (e.g. every mistake is mastered),
+       * so the session ends early.
+       */
+      nextQuestion: Question | null;
       now: string;
     }
   | { type: 'endSession'; now: string };
@@ -114,7 +118,7 @@ export function sessionReducer(state: SessionState, action: SessionAction): Sess
       };
       const attempts = [...state.attempts, attempt];
 
-      if (hasReachedSessionLength(updated)) {
+      if (hasReachedSessionLength(updated) || action.nextQuestion === null) {
         return {
           ...state,
           attempts,

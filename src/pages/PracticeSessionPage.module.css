@@ -1,0 +1,9 @@
+.modeBadge {
+  width: fit-content;
+  margin: 0 auto var(--space-3);
+  padding: var(--space-1) var(--space-4);
+  border: 2px solid var(--color-primary-border);
+  border-radius: 999px;
+  background-color: var(--color-selected-bg);
+  font-weight: 800;
+}

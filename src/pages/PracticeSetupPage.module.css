@@ -49,3 +49,12 @@
   background-color: var(--color-selected-bg);
   font-weight: 700;
 }
+
+.reviewNote {
+  margin: 0 0 var(--space-8);
+  padding: var(--space-4);
+  border: 2px dashed var(--color-primary-border);
+  border-radius: var(--radius);
+  background-color: var(--color-selected-bg);
+  font-weight: 700;
+}

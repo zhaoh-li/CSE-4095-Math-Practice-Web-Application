@@ -1,8 +1,11 @@
+import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 import { StatTiles } from '../components/stats/StatTiles';
 import { Button, ButtonLink } from '../components/ui/Button';
 import { DIFFICULTY_INFO, SESSION_LENGTH_OPTIONS } from '../config/practiceOptions';
+import { appData } from '../services/appData';
 import type { PracticeSession } from '../types';
+import { activePatterns, createReviewConfig } from '../utils/mistakes/mistakePatterns';
 import { describeOperations } from '../utils/practiceConfig';
 import { configFromSession, isCompletedSession } from '../utils/session/practiceSession';
 import { calculateAccuracy, totalsFromCounts } from '../utils/statistics';
@@ -40,9 +43,24 @@ export function SessionSummaryPage() {
 
 function SessionSummary({ session }: { session: PracticeSession }) {
   const navigate = useNavigate();
+  const [patterns] = useState(() => appData.loadMistakePatterns());
   const config = configFromSession(session);
+  const isReview = session.mode === 'mistake-review';
+  const activeCount = activePatterns(patterns).length;
+  const masteredThisSession = patterns.filter(
+    (p) =>
+      p.masteredAt !== undefined &&
+      p.masteredAt >= session.startedAt &&
+      p.masteredAt <= (session.completedAt ?? p.masteredAt),
+  ).length;
   const accuracy = calculateAccuracy(session.correctCount, session.attemptedCount);
-  const cheer = getCheer(accuracy);
+  const cheer =
+    isReview && activeCount === 0
+      ? {
+          title: 'You mastered all your mistakes!',
+          message: 'There is nothing left to review. Amazing!',
+        }
+      : getCheer(accuracy);
   const difficulty = DIFFICULTY_INFO[session.difficulty];
   const lengthLabel = SESSION_LENGTH_OPTIONS.find((o) => o.value === session.sessionLength)?.label;
   const endedEarly =
@@ -66,10 +84,8 @@ function SessionSummary({ session }: { session: PracticeSession }) {
           <dd>{describeOperations(config)}</dd>
         </div>
         <div>
-          <dt>Level</dt>
-          <dd>
-            {difficulty.label} (Level {difficulty.level})
-          </dd>
+          <dt>{isReview ? 'Practice type' : 'Level'}</dt>
+          <dd>{isReview ? 'Mistake review' : `${difficulty.label} (Level ${difficulty.level})`}</dd>
         </div>
         <div>
           <dt>Session length</dt>
@@ -82,6 +98,15 @@ function SessionSummary({ session }: { session: PracticeSession }) {
           <dt>Mistake review questions</dt>
           <dd>{session.mistakeReviewCount}</dd>
         </div>
+        {isReview && (
+          <div>
+            <dt>Mistakes mastered</dt>
+            <dd>
+              {masteredThisSession > 0 && <span aria-hidden="true">🏆 </span>}
+              {masteredThisSession}
+            </dd>
+          </div>
+        )}
       </dl>
 
       <div className={styles.actions}>
@@ -89,11 +114,23 @@ function SessionSummary({ session }: { session: PracticeSession }) {
           Practice Again
         </Button>
         <div className={styles.mistakes}>
-          <Button variant="secondary" disabled aria-describedby="practice-mistakes-note" fullWidth>
+          <Button
+            variant="secondary"
+            disabled={activeCount === 0}
+            aria-describedby="practice-mistakes-note"
+            fullWidth
+            onClick={() =>
+              navigate('/practice/session', {
+                state: { config: createReviewConfig(patterns, config) },
+              })
+            }
+          >
             Practice Mistakes
           </Button>
           <p id="practice-mistakes-note" className={styles.note}>
-            {session.incorrectCount === 0 ? 'No mistakes to practice!' : 'Coming soon!'}
+            {activeCount === 0
+              ? 'No mistakes to practice!'
+              : `${activeCount} ${activeCount === 1 ? 'mistake' : 'mistakes'} to review`}
           </p>
         </div>
         <Button

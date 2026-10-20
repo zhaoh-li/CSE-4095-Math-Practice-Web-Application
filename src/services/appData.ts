@@ -1,13 +1,20 @@
 import { DEFAULT_SETTINGS } from '../config/defaultSettings';
-import type { AppSettings, PracticeAttempt, PracticeSession } from '../types';
+import type { AppSettings, MistakePattern, PracticeAttempt, PracticeSession } from '../types';
 import { createStorageService, type StorageService, type WriteResult } from './storage';
-import { isStoredAttempt, isStoredSession, parseList, parseSettings } from './validators';
+import {
+  isStoredAttempt,
+  isStoredMistakePattern,
+  isStoredSession,
+  parseList,
+  parseSettings,
+} from './validators';
 
 export const STORAGE_KEYS = {
   schemaVersion: 'schemaVersion',
   settings: 'settings',
   sessions: 'sessions',
   attempts: 'attempts',
+  mistakePatterns: 'mistakePatterns',
 } as const;
 
 /** Bump this and add a migration whenever the stored data shape changes. */
@@ -120,10 +127,20 @@ export function createAppData(storage: StorageService = createStorageService()) 
       return storage.write(STORAGE_KEYS.attempts, [...attempts, attempt]);
     },
 
-    /** Clears practice history. Settings are kept. */
+    loadMistakePatterns(): MistakePattern[] {
+      return storage.read(STORAGE_KEYS.mistakePatterns, parseList(isStoredMistakePattern), [])
+        .value;
+    },
+
+    saveMistakePatterns(patterns: readonly MistakePattern[]): WriteResult {
+      return storage.write(STORAGE_KEYS.mistakePatterns, patterns);
+    },
+
+    /** Clears practice history and mistakes. Settings are kept. */
     resetStatistics(): void {
       storage.remove(STORAGE_KEYS.sessions);
       storage.remove(STORAGE_KEYS.attempts);
+      storage.remove(STORAGE_KEYS.mistakePatterns);
     },
 
     /** Removes everything this app has stored and starts fresh. */
