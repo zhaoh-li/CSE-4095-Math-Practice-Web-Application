@@ -1,3 +1,4 @@
+import { DEFAULT_SETTINGS } from './defaultSettings';
 import type { DifficultyLevel, MathOperation, PracticeConfig, SessionLength } from '../types';
 
 export interface OperationInfo {
@@ -55,9 +56,10 @@ export const SESSION_LENGTH_OPTIONS: SessionLengthOption[] = [
   { value: 'continuous', label: 'Keep going', description: 'No limit. Stop when you like.' },
 ];
 
+/** Matches the default settings in config/defaultSettings.ts. */
 export const DEFAULT_PRACTICE_CONFIG: PracticeConfig = {
   mode: 'regular',
-  operations: ['addition'],
-  difficulty: 'beginner',
-  sessionLength: 10,
+  operations: [...DEFAULT_SETTINGS.defaultOperations],
+  difficulty: DEFAULT_SETTINGS.defaultDifficulty,
+  sessionLength: DEFAULT_SETTINGS.defaultSessionLength,
 };

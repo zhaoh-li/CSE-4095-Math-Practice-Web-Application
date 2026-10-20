@@ -1,0 +1,37 @@
+.help {
+  margin: 0 0 var(--space-3);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+
+/* A tiny sample of the theme: background, a button, and right/wrong */
+.preview {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+  padding: var(--space-2);
+  border: 1px solid #00000033;
+  border-radius: var(--radius-sm);
+}
+
+.chip {
+  display: inline-grid;
+  place-items: center;
+  min-width: 2.25rem;
+  height: 2rem;
+  padding: 0 var(--space-2);
+  border: 2px solid;
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;
+  font-weight: 800;
+  color: #1e2a4a;
+}
+
+.wrong {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    transparent 0 4px,
+    rgba(0, 0, 0, 0.18) 4px 6px
+  );
+}

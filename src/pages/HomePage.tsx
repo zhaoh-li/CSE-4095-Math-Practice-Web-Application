@@ -1,9 +1,18 @@
+import { useLocation } from 'react-router';
 import { ButtonLink } from '../components/ui/Button';
 import styles from './HomePage.module.css';
 
 export function HomePage() {
+  const location = useLocation();
+  const notice = (location.state as { notice?: unknown } | null)?.notice;
+
   return (
     <section className={styles.hero} aria-labelledby="home-title">
+      {typeof notice === 'string' && (
+        <p className={styles.notice} role="status">
+          {notice}
+        </p>
+      )}
       <h1 id="home-title">Welcome to Math Practice!</h1>
       <p className={styles.intro}>
         Practice addition, subtraction, multiplication, and division with flash cards. Pick an

@@ -29,7 +29,7 @@ describe('App routing', () => {
 
   it.each([
     ['Start Practice', 'Set Up Your Practice'],
-    ['View Statistics', 'Statistics'],
+    ['View Statistics', 'Your Statistics'],
   ])('goes to the right page when "%s" is clicked', async (buttonText, pageTitle) => {
     const user = userEvent.setup();
     renderAt('/');
@@ -49,7 +49,7 @@ describe('App routing', () => {
     ['/practice/setup', 'Set Up Your Practice'],
     ['/practice/session', 'Set Up Your Practice'], // redirects without setup
     ['/practice/summary', 'No Results Yet'],
-    ['/statistics', 'Statistics'],
+    ['/statistics', 'Your Statistics'],
     ['/settings', 'Settings'],
   ])('renders %s', (path, title) => {
     renderAt(path);

@@ -1,13 +1,17 @@
 import type { DifficultyLevel, MathOperation } from './question';
 import type { SessionLength } from './session';
 
+/** Color themes for different kinds of color vision. */
+export const COLOR_VISION_MODES = ['off', 'red-green', 'blue-yellow', 'high-contrast'] as const;
+export type ColorVisionMode = (typeof COLOR_VISION_MODES)[number];
+
 export interface AppSettings {
   soundEffectsEnabled: boolean;
   cardAnimationsEnabled: boolean;
   showExplanations: boolean;
   feedbackEffectsEnabled: boolean;
-  /** Uses a color-blind-safe palette and adds non-color cues. */
-  colorBlindMode: boolean;
+  /** Swaps the whole color theme for one suited to a type of color vision. */
+  colorVisionMode: ColorVisionMode;
   defaultSessionLength: SessionLength;
   defaultDifficulty: DifficultyLevel;
   defaultOperations: MathOperation[];

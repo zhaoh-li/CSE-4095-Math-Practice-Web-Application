@@ -37,3 +37,13 @@
     width: 100%;
   }
 }
+
+.notice {
+  max-width: 34rem;
+  margin: 0 auto var(--space-6);
+  padding: var(--space-3) var(--space-4);
+  border: 2px solid var(--color-primary-border);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-selected-bg);
+  font-weight: 700;
+}

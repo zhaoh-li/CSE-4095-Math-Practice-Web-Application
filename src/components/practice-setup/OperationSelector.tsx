@@ -4,12 +4,18 @@ import { Button } from '../ui/Button';
 import styles from './OptionCards.module.css';
 
 interface OperationSelectorProps {
+  /** Heading for the group. */
+  legend?: string;
   selected: MathOperation[];
   onChange: (operations: MathOperation[]) => void;
 }
 
 /** Checkbox cards for picking one or more operations. */
-export function OperationSelector({ selected, onChange }: OperationSelectorProps) {
+export function OperationSelector({
+  selected,
+  onChange,
+  legend = '1. Choose operations',
+}: OperationSelectorProps) {
   const allSelected = selected.length === MATH_OPERATIONS.length;
 
   function toggle(operation: MathOperation) {
@@ -22,7 +28,7 @@ export function OperationSelector({ selected, onChange }: OperationSelectorProps
 
   return (
     <fieldset className={styles.fieldset}>
-      <legend className={styles.legend}>1. Choose operations</legend>
+      <legend className={styles.legend}>{legend}</legend>
       <div className={styles.legendRow}>
         <p className={styles.hint}>Pick as many as you like.</p>
         <Button

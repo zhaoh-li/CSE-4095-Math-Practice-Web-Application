@@ -41,9 +41,23 @@
   --color-positive: #9bdc9f;
   --color-positive-hover: #b5e6b8;
   --color-positive-border: #2e7d32;
+  --color-positive-text: #1e2a4a;
   --color-negative: #f7b2c1;
   --color-negative-hover: #fac7d2;
   --color-negative-border: #b4234a;
+  --color-negative-text: #1e2a4a;
+
+  /* On/off switch track when off */
+  --color-switch-off: #e5e9f0;
+
+  /* Destructive actions (reset, delete) */
+  --color-danger: #b42318;
+  --color-danger-hover: #c73a2e;
+  --color-danger-border: #7a1810;
+  --color-danger-text: #ffffff;
+
+  /* Extra cue for "incorrect" (used by the color vision themes) */
+  --pattern-negative: none;
 
   /* Feedback */
   --color-error: #b42318;
@@ -79,6 +93,142 @@
   line-height: 1.5;
   color: var(--color-text);
   background-color: var(--color-bg);
+}
+
+/*
+ * Color vision themes (Settings → Color vision). Each one replaces the whole
+ * palette, not just a few colors. Every theme passes WCAG contrast checks, and
+ * right/wrong always also use ✓ / ✗, words, and a stripe pattern on "wrong".
+ */
+
+/* Red-green (protanopia / deuteranopia, the most common types):
+   cool blue-gray background, strong blue buttons, blue = right, orange = wrong */
+:root[data-color-vision='red-green'] {
+  --color-bg: #f1f5fa;
+  --color-bg-blue: #d6e8f8;
+  --color-bg-pink: #e8e3f6;
+  --color-bg-green: #fff3c4;
+  --color-text: #14213d;
+  --color-text-muted: #45506a;
+  --color-heading: #0b4f8a;
+  --color-surface-translucent: rgba(255, 255, 255, 0.85);
+  --color-border: #6b7a96;
+  --color-border-soft: #c9d3e3;
+  --color-primary: #0072b2;
+  --color-primary-hover: #00629a;
+  --color-primary-text: #ffffff;
+  --color-primary-border: #003f63;
+  --color-secondary-hover: #e3eef8;
+  --color-selected-bg: #d3e8f7;
+  --color-selected-border: #0072b2;
+  --color-card-back: #eaf3fb;
+  --color-positive: #a6d8f5;
+  --color-positive-hover: #c0e4f8;
+  --color-positive-border: #0062a0;
+  --color-positive-text: #14213d;
+  --color-negative: #f9c58d;
+  --color-negative-hover: #fbd5ab;
+  --color-negative-border: #a04e00;
+  --color-negative-text: #14213d;
+  --color-danger: #8f3f00;
+  --color-danger-hover: #a34a05;
+  --color-danger-border: #5c2800;
+  --color-error: #8f3f00;
+  --color-error-bg: #fff1e3;
+  --color-focus: #a04e00;
+  --color-switch-off: #e1e7f0;
+  --pattern-negative: repeating-linear-gradient(
+    -45deg,
+    transparent 0 6px,
+    rgba(160, 78, 0, 0.2) 6px 9px
+  );
+}
+
+/* Blue-yellow (tritanopia): avoids blue/yellow and blue/green pairs.
+   Soft pink-gray background, teal buttons, teal = right, magenta = wrong */
+:root[data-color-vision='blue-yellow'] {
+  --color-bg: #faf4f6;
+  --color-bg-blue: #ddf2f1;
+  --color-bg-pink: #fbe0ea;
+  --color-bg-green: #efe6f5;
+  --color-text: #1b1b1f;
+  --color-text-muted: #4d4a52;
+  --color-heading: #00626b;
+  --color-surface-translucent: rgba(255, 255, 255, 0.85);
+  --color-border: #7a7480;
+  --color-border-soft: #dcd3da;
+  --color-primary: #00737d;
+  --color-primary-hover: #00636b;
+  --color-primary-text: #ffffff;
+  --color-primary-border: #004349;
+  --color-secondary-hover: #e6f4f3;
+  --color-selected-bg: #d5efed;
+  --color-selected-border: #00737d;
+  --color-card-back: #f1f8f8;
+  --color-positive: #9edfd9;
+  --color-positive-hover: #b9e8e4;
+  --color-positive-border: #00695f;
+  --color-positive-text: #1b1b1f;
+  --color-negative: #f7b6ce;
+  --color-negative-hover: #f9cadb;
+  --color-negative-border: #a8104f;
+  --color-negative-text: #1b1b1f;
+  --color-danger: #a8104f;
+  --color-danger-hover: #bd1e5e;
+  --color-danger-border: #6e0a33;
+  --color-error: #a8104f;
+  --color-error-bg: #fdeaf1;
+  --color-focus: #a8104f;
+  --color-switch-off: #ece6ea;
+  --pattern-negative: repeating-linear-gradient(
+    -45deg,
+    transparent 0 6px,
+    rgba(168, 16, 79, 0.18) 6px 9px
+  );
+}
+
+/* High contrast: black and white, thick black borders, no gradients or shadows.
+   Right/wrong are told apart by ✓ / ✗, words, and stripes only */
+:root[data-color-vision='high-contrast'] {
+  --color-bg: #ffffff;
+  --color-bg-blue: #ffffff;
+  --color-bg-pink: #ffffff;
+  --color-bg-green: #ffffff;
+  --color-text: #000000;
+  --color-text-muted: #1f1f1f;
+  --color-heading: #000000;
+  --color-surface-translucent: #ffffff;
+  --color-border: #000000;
+  --color-border-soft: #000000;
+  --color-primary: #000000;
+  --color-primary-hover: #333333;
+  --color-primary-text: #ffffff;
+  --color-primary-border: #000000;
+  --color-secondary-hover: #ededed;
+  --color-selected-bg: #ffe14d;
+  --color-selected-border: #000000;
+  --color-card-back: #ffffff;
+  --color-positive: #ffffff;
+  --color-positive-hover: #ededed;
+  --color-positive-border: #000000;
+  --color-positive-text: #000000;
+  --color-negative: #ffffff;
+  --color-negative-hover: #ededed;
+  --color-negative-border: #000000;
+  --color-negative-text: #000000;
+  --color-danger: #b00020;
+  --color-danger-hover: #c8102e;
+  --color-danger-border: #000000;
+  --color-error: #b00020;
+  --color-error-bg: #ffffff;
+  --color-focus: #0047ff;
+  --color-switch-off: #ffffff;
+  --shadow: none;
+  --pattern-negative: repeating-linear-gradient(
+    -45deg,
+    transparent 0 6px,
+    rgba(0, 0, 0, 0.28) 6px 9px
+  );
 }
 
 *,

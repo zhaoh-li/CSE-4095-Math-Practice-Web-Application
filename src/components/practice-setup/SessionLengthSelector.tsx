@@ -4,17 +4,23 @@ import type { SessionLength } from '../../types';
 import styles from './OptionCards.module.css';
 
 interface SessionLengthSelectorProps {
+  /** Heading for the group. */
+  legend?: string;
   selected: SessionLength;
   onChange: (length: SessionLength) => void;
 }
 
 /** Radio cards for picking how many questions to practice. */
-export function SessionLengthSelector({ selected, onChange }: SessionLengthSelectorProps) {
+export function SessionLengthSelector({
+  selected,
+  onChange,
+  legend = '3. How many questions?',
+}: SessionLengthSelectorProps) {
   const groupId = useId();
 
   return (
     <fieldset className={styles.fieldset}>
-      <legend className={styles.legend}>3. How many questions?</legend>
+      <legend className={styles.legend}>{legend}</legend>
       <div className={`${styles.grid} ${styles.cols4}`}>
         {SESSION_LENGTH_OPTIONS.map((option) => {
           const isSelected = selected === option.value;

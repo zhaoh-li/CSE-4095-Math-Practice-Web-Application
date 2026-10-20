@@ -156,3 +156,52 @@ describe('PracticeSessionPage', () => {
     expect(screen.getByText('20 questions (ended early)')).toBeInTheDocument();
   });
 });
+
+describe('saving progress', () => {
+  it('saves every answer and the session, and shows them on the Statistics page', async () => {
+    const { appData } = await import('../services/appData');
+    const user = renderSession({ sessionLength: 5 });
+    const results: SelfReportedResult[] = ['correct', 'incorrect', 'correct', 'correct', 'correct'];
+    for (const result of results) await answerCard(user, result);
+
+    const attempts = appData.loadAttempts();
+    expect(attempts).toHaveLength(5);
+    expect(attempts.map((a) => a.result)).toEqual(results);
+    expect(new Set(attempts.map((a) => a.sessionId)).size).toBe(1);
+
+    const [saved] = appData.loadSessions();
+    expect(saved).toMatchObject({
+      attemptedCount: 5,
+      correctCount: 4,
+      incorrectCount: 1,
+      isActive: false,
+    });
+    expect(saved.completedAt).toBeTruthy();
+
+    await user.click(
+      within(screen.getByRole('main')).getByRole('link', { name: 'View Statistics' }),
+    );
+    expect(
+      within(screen.getByRole('list', { name: 'Overall results' })).getByText('Accuracy')
+        .previousSibling,
+    ).toHaveTextContent('80%');
+  });
+
+  it('saves answers right away, even if the session is not finished', async () => {
+    const { appData } = await import('../services/appData');
+    const user = renderSession({ sessionLength: 10 });
+    await answerCard(user, 'incorrect');
+    expect(appData.loadAttempts()).toHaveLength(1);
+    expect(appData.loadSessions()[0]).toMatchObject({ attemptedCount: 1, isActive: true });
+  });
+
+  it('turns off card animations when the setting is off', async () => {
+    const { appData } = await import('../services/appData');
+    const { DEFAULT_SETTINGS } = await import('../config/defaultSettings');
+    appData.saveSettings({ ...DEFAULT_SETTINGS, cardAnimationsEnabled: false });
+    renderSession();
+    expect(document.querySelector('[data-face="front"]')?.parentElement?.className).toMatch(
+      /static/,
+    );
+  });
+});

@@ -39,9 +39,10 @@
   background-color: var(--color-primary-hover);
 }
 
+/* White button: regular text color, since --color-primary-text is white in some themes */
 .secondary {
   background-color: var(--color-secondary);
-  color: var(--color-primary-text);
+  color: var(--color-text);
 }
 
 .secondary:hover:not(:disabled) {
@@ -53,7 +54,7 @@
   background-color: var(--color-positive);
   border-color: var(--color-positive-border);
   box-shadow: 0 3px 0 var(--color-positive-border);
-  color: var(--color-primary-text);
+  color: var(--color-positive-text);
 }
 
 .positive:hover:not(:disabled) {
@@ -62,13 +63,26 @@
 
 .negative {
   background-color: var(--color-negative);
+  background-image: var(--pattern-negative);
   border-color: var(--color-negative-border);
   box-shadow: 0 3px 0 var(--color-negative-border);
-  color: var(--color-primary-text);
+  color: var(--color-negative-text);
 }
 
 .negative:hover:not(:disabled) {
   background-color: var(--color-negative-hover);
+}
+
+/* Destructive actions like Reset and Clear All */
+.danger {
+  background-color: var(--color-danger);
+  border-color: var(--color-danger-border);
+  box-shadow: 0 3px 0 var(--color-danger-border);
+  color: var(--color-danger-text);
+}
+
+.danger:hover:not(:disabled) {
+  background-color: var(--color-danger-hover);
 }
 
 .fullWidth {

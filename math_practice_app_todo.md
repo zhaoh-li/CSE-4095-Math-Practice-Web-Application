@@ -321,129 +321,130 @@ Initial routes:
 ## Phase 9: Local Data Storage
 
 ### 35. Create the Storage Service
-- [ ] Create a wrapper around `localStorage`.
-- [ ] Add functions for reading data.
-- [ ] Add functions for writing data.
-- [ ] Add JSON parsing error handling.
-- [ ] Add validation for loaded data.
-- [ ] Handle unavailable browser storage.
-- [ ] Handle storage-capacity errors.
+- [x] Create a wrapper around `localStorage`.
+- [x] Add functions for reading data.
+- [x] Add functions for writing data.
+- [x] Add JSON parsing error handling.
+- [x] Add validation for loaded data.
+- [x] Handle unavailable browser storage.
+- [x] Handle storage-capacity errors.
 
 ### 36. Add Data Schema Versioning
-- [ ] Store a data-schema version.
-- [ ] Detect missing or older versions.
-- [ ] Create an initial migration structure.
-- [ ] Avoid deleting unrelated stored data.
+- [x] Store a data-schema version.
+- [x] Detect missing or older versions.
+- [x] Create an initial migration structure.
+- [x] Avoid deleting unrelated stored data.
 
 ### 37. Persist Application Settings
-- [ ] Save selected settings.
-- [ ] Load settings when the application starts.
-- [ ] Use defaults when no settings exist.
-- [ ] Recover from invalid stored settings.
+- [x] Save selected settings.
+- [x] Load settings when the application starts.
+- [x] Use defaults when no settings exist.
+- [x] Recover from invalid stored settings.
 
 ### 38. Persist Practice Sessions
-- [ ] Save session information.
-- [ ] Save session completion details.
-- [ ] Load recent sessions.
-- [ ] Limit or summarize old session records when necessary.
+- [x] Save session information.
+- [x] Save session completion details.
+- [x] Load recent sessions.
+- [x] Limit or summarize old session records when necessary.
 
 ### 39. Persist Practice Attempts
-- [ ] Save every completed attempt.
-- [ ] Include the selected answer.
-- [ ] Include the self-reported result.
-- [ ] Include the operation and difficulty.
-- [ ] Include the session ID and timestamp.
-- [ ] Confirm that attempts persist after a browser restart.
+- [x] Save every completed attempt.
+- [x] Include the selected answer.
+- [x] Include the self-reported result.
+- [x] Include the operation and difficulty.
+- [x] Include the session ID and timestamp.
+- [x] Confirm that attempts persist after a browser restart.
 
 ## Phase 10: Statistics
 
 ### 40. Implement Statistics Calculations
-- [ ] Calculate total attempted questions.
-- [ ] Calculate total correct answers.
-- [ ] Calculate total incorrect answers.
-- [ ] Calculate overall accuracy.
-- [ ] Handle zero attempts without dividing by zero.
-- [ ] Add unit tests for calculations.
+- [x] Calculate total attempted questions.
+- [x] Calculate total correct answers.
+- [x] Calculate total incorrect answers.
+- [x] Calculate overall accuracy.
+- [x] Handle zero attempts without dividing by zero.
+- [x] Add unit tests for calculations.
 
 ### 41. Track Statistics by Operation
-- [ ] Track addition attempts.
-- [ ] Track subtraction attempts.
-- [ ] Track multiplication attempts.
-- [ ] Track division attempts.
-- [ ] Calculate accuracy for each operation.
+- [x] Track addition attempts.
+- [x] Track subtraction attempts.
+- [x] Track multiplication attempts.
+- [x] Track division attempts.
+- [x] Calculate accuracy for each operation.
 
 ### 42. Track Statistics by Difficulty
-- [ ] Track Level 1 performance.
-- [ ] Track Level 2 performance.
-- [ ] Track Level 3 performance.
-- [ ] Track Level 4 performance.
-- [ ] Calculate accuracy for each level.
+- [x] Track Level 1 performance.
+- [x] Track Level 2 performance.
+- [x] Track Level 3 performance.
+- [x] Track Level 4 performance.
+- [x] Calculate accuracy for each level.
 
 ### 43. Create the Statistics Overview
-- [ ] Display total attempted questions.
-- [ ] Display total correct answers.
-- [ ] Display total incorrect answers.
-- [ ] Display overall accuracy.
-- [ ] Add an empty state for new users.
+- [x] Display total attempted questions.
+- [x] Display total correct answers.
+- [x] Display total incorrect answers.
+- [x] Display overall accuracy.
+- [x] Add an empty state for new users.
 
 ### 44. Display Statistics by Operation
-- [ ] Create one statistics card per operation.
-- [ ] Display attempted, correct, and incorrect totals.
-- [ ] Display accuracy.
-- [ ] Make the layout responsive.
+- [x] Create one statistics card per operation.
+- [x] Display attempted, correct, and incorrect totals.
+- [x] Display accuracy.
+- [x] Make the layout responsive.
 
 ### 45. Display Statistics by Difficulty
-- [ ] Create one statistics card per difficulty level.
-- [ ] Display attempted, correct, and incorrect totals.
-- [ ] Display accuracy.
-- [ ] Clearly label each level.
+- [x] Create one statistics card per difficulty level.
+- [x] Display attempted, correct, and incorrect totals.
+- [x] Display accuracy.
+- [x] Clearly label each level.
 
 ### 46. Display Recent Sessions
-- [ ] List recent session dates.
-- [ ] Display operations practiced.
-- [ ] Display difficulty.
-- [ ] Display attempted, correct, and incorrect totals.
-- [ ] Display session accuracy.
-- [ ] Sort sessions from newest to oldest.
-- [ ] Add an empty state when no sessions exist.
+- [x] List recent session dates.
+- [x] Display operations practiced.
+- [x] Display difficulty.
+- [x] Display attempted, correct, and incorrect totals.
+- [x] Display session accuracy.
+- [x] Sort sessions from newest to oldest.
+- [x] Add an empty state when no sessions exist.
 
 ### 47. Add Statistics Reset
-- [ ] Add a **Reset Statistics** button.
-- [ ] Create a confirmation dialog.
-- [ ] Require explicit confirmation.
-- [ ] Clear attempts.
-- [ ] Clear sessions.
-- [ ] Clear aggregate statistics.
-- [ ] Decide whether settings should remain unchanged.
-- [ ] Refresh the statistics page after deletion.
+- [x] Add a **Reset Statistics** button.
+- [x] Create a confirmation dialog.
+- [x] Require explicit confirmation.
+- [x] Clear attempts.
+- [x] Clear sessions.
+- [x] Clear aggregate statistics.
+- [x] Decide whether settings should remain unchanged. (Decision: settings are kept; only "Clear All Application Data" resets them.)
+- [x] Refresh the statistics page after deletion.
 
 ## Phase 11: Settings
 
 ### 48. Create the Settings Page
-- [ ] Add a sound-effects setting.
-- [ ] Add a card-animation setting.
-- [ ] Add a show-explanations setting.
-- [ ] Add a default session-length setting.
-- [ ] Add a default difficulty setting.
-- [ ] Add default operation settings.
-- [ ] Add a color-blind mode setting.
-  - [ ] Swap the color palette for one that is safe for common types of color blindness (red-green and blue-yellow).
-  - [ ] Add patterns, icons, or text labels anywhere color shows meaning (correct/incorrect, selected, operations).
-  - [ ] Apply the mode instantly across the whole app and save it with the other settings.
-- [ ] Save settings automatically or through a save button.
+- [x] Add a sound-effects setting.
+- [x] Add a card-animation setting.
+- [x] Add a show-explanations setting.
+- [x] Add a default session-length setting.
+- [x] Add a default difficulty setting.
+- [x] Add default operation settings.
+- [x] Add a color-blind mode setting.
+  - [x] Offer separate full themes: Red-green (protanopia/deuteranopia), Blue-yellow (tritanopia), and High contrast, each replacing the background, buttons, borders, text, and right/wrong colors.
+  - [x] Add patterns, icons, or text labels anywhere color shows meaning (correct/incorrect, selected, operations).
+  - [x] Show a preview of each theme in Settings, apply it instantly across the whole app, and save it with the other settings.
+  - [x] Check every theme for WCAG contrast automatically in tests.
+- [x] Save settings automatically or through a save button.
 
 ### 49. Apply Default Practice Settings
-- [ ] Load default operations on the setup page.
-- [ ] Load the default difficulty.
-- [ ] Load the default session length.
-- [ ] Allow defaults to be changed for an individual session.
+- [x] Load default operations on the setup page.
+- [x] Load the default difficulty.
+- [x] Load the default session length.
+- [x] Allow defaults to be changed for an individual session.
 
 ### 50. Add Clear-All-Data Functionality
-- [ ] Add a **Clear All Application Data** button.
-- [ ] Show a strong confirmation warning.
-- [ ] Clear settings, sessions, attempts, and mistake patterns.
-- [ ] Restore application defaults.
-- [ ] Return the user to the home page.
+- [x] Add a **Clear All Application Data** button.
+- [x] Show a strong confirmation warning.
+- [x] Clear settings, sessions, attempts, and mistake patterns.
+- [x] Restore application defaults.
+- [x] Return the user to the home page.
 
 ## Phase 12: Mistake Tracking
 
