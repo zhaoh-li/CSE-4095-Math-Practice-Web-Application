@@ -2,6 +2,7 @@ import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router';
 import { AppRoutes } from '../AppRoutes';
+import { appData } from '../services/appData';
 import type { PracticeSession } from '../types';
 
 const finishedSession: PracticeSession = {
@@ -99,11 +100,27 @@ describe('SessionSummaryPage', () => {
       expect(main.getByRole('link', { name: 'Return Home' })).toHaveAttribute('href', '/');
     });
 
-    it('shows Practice Mistakes as not available yet', () => {
-      renderSummary();
+    it('Practice Mistakes starts a review session when there are mistakes', async () => {
+      appData.saveMistakePatterns([
+        {
+          id: 'm1',
+          operation: 'multiplication',
+          firstOperand: 7,
+          secondOperand: 8,
+          correctAnswer: 56,
+          difficulty: 'easy',
+          incorrectCount: 2,
+          similarCorrectCount: 0,
+          isMastered: false,
+          createdAt: '2026-10-20T12:00:00.000Z',
+          lastIncorrectAt: '2026-10-20T12:00:00.000Z',
+        },
+      ]);
+      const user = renderSummary();
       const button = screen.getByRole('button', { name: 'Practice Mistakes' });
-      expect(button).toBeDisabled();
-      expect(button).toHaveAccessibleDescription('Coming soon!');
+      expect(button).toHaveAccessibleDescription('1 mistake to review');
+      await user.click(button);
+      expect(screen.getByText(/practicing your mistakes/i)).toBeInTheDocument();
     });
 
     it('says there are no mistakes to practice after a perfect score', () => {

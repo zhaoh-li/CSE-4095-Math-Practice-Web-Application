@@ -3,6 +3,9 @@ import {
   MATH_OPERATIONS,
   type AppStatistics,
   type DifficultyStatistics,
+  type MathOperation,
+  type MistakePattern,
+  type MistakeStatistics,
   type OperationStatistics,
   type PerformanceTotals,
   type PracticeAttempt,
@@ -47,6 +50,7 @@ export function statisticsByDifficulty(attempts: readonly PracticeAttempt[]): Di
 export function summarizeSession(session: PracticeSession): RecentSessionSummary {
   return {
     sessionId: session.id,
+    mode: session.mode,
     completedAt: session.completedAt ?? session.startedAt,
     operations: [...session.operations],
     difficulty: session.difficulty,
@@ -62,6 +66,7 @@ export function summarizeSession(session: PracticeSession): RecentSessionSummary
 export function calculateAppStatistics(
   attempts: readonly PracticeAttempt[],
   sessions: readonly PracticeSession[],
+  patterns: readonly MistakePattern[] = [],
   recentLimit = 10,
 ): AppStatistics {
   const recentSessions = sessions
@@ -75,12 +80,50 @@ export function calculateAppStatistics(
     byOperation: statisticsByOperation(attempts),
     byDifficulty: statisticsByDifficulty(attempts),
     recentSessions,
-    // Filled in by mistake tracking (Phases 12–15)
-    mistakes: {
-      activePatterns: 0,
-      masteredPatterns: 0,
-      similarQuestionsPracticed: 0,
-      reviewQuestionsCorrect: 0,
-    },
+    mistakes: calculateMistakeStatistics(patterns, attempts),
   };
+}
+
+/** Counts for the Mistakes section of the Statistics page. */
+export function calculateMistakeStatistics(
+  patterns: readonly MistakePattern[],
+  attempts: readonly PracticeAttempt[],
+): MistakeStatistics {
+  const reviewAttempts = attempts.filter((a) => a.source === 'mistake-review');
+  return {
+    activePatterns: patterns.filter((p) => !p.isMastered).length,
+    masteredPatterns: patterns.filter((p) => p.isMastered).length,
+    similarQuestionsPracticed: reviewAttempts.length,
+    reviewQuestionsCorrect: reviewAttempts.filter((a) => a.result === 'correct').length,
+  };
+}
+
+export interface MostMissed {
+  /** More than one when tied. In + − × ÷ order. */
+  operations: MathOperation[];
+  count: number;
+}
+
+/** The operation(s) answered wrong most often, or null if nothing was missed. */
+export function mostMissedOperations(attempts: readonly PracticeAttempt[]): MostMissed | null {
+  const counts = MATH_OPERATIONS.map((op) => ({
+    op,
+    count: attempts.filter((a) => a.operation === op && a.result === 'incorrect').length,
+  }));
+  const max = Math.max(...counts.map((c) => c.count));
+  if (max === 0) return null;
+  return { operations: counts.filter((c) => c.count === max).map((c) => c.op), count: max };
+}
+
+/**
+ * Mistake patterns, most-missed first. Ties go to the most recently missed,
+ * then to a fixed order, so the list never jumps around.
+ */
+export function sortByMostMissed(patterns: readonly MistakePattern[]): MistakePattern[] {
+  return [...patterns].sort(
+    (a, b) =>
+      b.incorrectCount - a.incorrectCount ||
+      b.lastIncorrectAt.localeCompare(a.lastIncorrectAt) ||
+      a.id.localeCompare(b.id),
+  );
 }

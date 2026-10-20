@@ -4,6 +4,7 @@ import { DifficultySelector } from '../components/practice-setup/DifficultySelec
 import { OperationSelector } from '../components/practice-setup/OperationSelector';
 import { SessionLengthSelector } from '../components/practice-setup/SessionLengthSelector';
 import { ColorVisionSelector } from '../components/settings/ColorVisionSelector';
+import { MasteryThresholdSelector } from '../components/settings/MasteryThresholdSelector';
 import { Button } from '../components/ui/Button';
 import { ConfirmDialog } from '../components/ui/ConfirmDialog';
 import { ToggleSwitch } from '../components/ui/ToggleSwitch';
@@ -78,6 +79,10 @@ export function SettingsPage() {
           selected={settings.defaultSessionLength}
           onChange={(defaultSessionLength) => change({ defaultSessionLength })}
         />
+        <MasteryThresholdSelector
+          selected={settings.masteryThreshold}
+          onChange={(masteryThreshold) => change({ masteryThreshold })}
+        />
       </section>
 
       <section className={styles.panel} aria-labelledby="display-title">
@@ -112,7 +117,7 @@ export function SettingsPage() {
         <h2 id="data-title">Your Data</h2>
         <p className={styles.help}>
           Your progress is saved only in this browser. Clearing it removes all answers, sessions,
-          and settings.
+          mistakes, and settings.
         </p>
         <Button variant="danger" onClick={() => setIsConfirmingClear(true)}>
           Clear All Application Data

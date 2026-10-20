@@ -1,26 +1,33 @@
 import { useMemo, useState } from 'react';
+import { MistakeSection } from '../components/stats/MistakeSection';
 import { PerformanceCard } from '../components/stats/PerformanceCard';
 import { RecentSessionsTable } from '../components/stats/RecentSessionsTable';
 import { StatTiles } from '../components/stats/StatTiles';
 import { Button, ButtonLink } from '../components/ui/Button';
 import { ConfirmDialog } from '../components/ui/ConfirmDialog';
 import { DIFFICULTY_INFO, OPERATION_INFO } from '../config/practiceOptions';
+import { useSettings } from '../context/SettingsContext';
 import { appData } from '../services/appData';
 import { DIFFICULTY_LEVELS, MATH_OPERATIONS } from '../types';
 import { calculateAppStatistics } from '../utils/statistics';
 import styles from './StatisticsPage.module.css';
 
 function loadHistory() {
-  return { attempts: appData.loadAttempts(), sessions: appData.loadSessions() };
+  return {
+    attempts: appData.loadAttempts(),
+    sessions: appData.loadSessions(),
+    patterns: appData.loadMistakePatterns(),
+  };
 }
 
 export function StatisticsPage() {
+  const { settings } = useSettings();
   const [history, setHistory] = useState(loadHistory);
   const [isConfirmingReset, setIsConfirmingReset] = useState(false);
   const [resetMessage, setResetMessage] = useState('');
 
   const stats = useMemo(
-    () => calculateAppStatistics(history.attempts, history.sessions),
+    () => calculateAppStatistics(history.attempts, history.sessions, history.patterns),
     [history],
   );
 
@@ -92,6 +99,16 @@ export function StatisticsPage() {
             </div>
           </section>
 
+          <section className={styles.section} aria-labelledby="mistakes-title">
+            <h2 id="mistakes-title">Mistakes</h2>
+            <MistakeSection
+              patterns={history.patterns}
+              attempts={history.attempts}
+              stats={stats.mistakes}
+              masteryThreshold={settings.masteryThreshold}
+            />
+          </section>
+
           <section className={styles.section} aria-labelledby="recent-title">
             <h2 id="recent-title">Recent Sessions</h2>
             {stats.recentSessions.length > 0 ? (
@@ -104,7 +121,7 @@ export function StatisticsPage() {
           <section className={`${styles.section} ${styles.reset}`} aria-labelledby="reset-title">
             <h2 id="reset-title">Start Over</h2>
             <p className={styles.muted}>
-              Reset clears your answers and sessions. Your settings stay the same.
+              Reset clears your answers, sessions, and mistakes. Your settings stay the same.
             </p>
             <Button variant="danger" onClick={() => setIsConfirmingReset(true)}>
               Reset Statistics

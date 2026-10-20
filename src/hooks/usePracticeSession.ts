@@ -1,7 +1,9 @@
 import { useCallback, useReducer } from 'react';
 import { appData } from '../services/appData';
 import type { PracticeConfig, SelfReportedResult } from '../types';
+import { applyAttemptToPatterns } from '../utils/mistakes/mistakePatterns';
 import { generateQuestion } from '../utils/questions/generateQuestion';
+import { nextQuestion } from '../utils/session/nextQuestion';
 import {
   createAttempt,
   createInitialSessionState,
@@ -11,27 +13,37 @@ import {
   type SessionState,
 } from '../utils/session/practiceSession';
 
-/** Saves whatever changed between two session states. */
-function persistChanges(before: SessionState, after: SessionState) {
-  if (after === before) return;
-  const newAttempt = after.attempts.length > before.attempts.length ? after.attempts.at(-1) : null;
-  if (newAttempt) appData.saveAttempt(newAttempt);
-  appData.saveSession(after.session);
+interface SessionOptions {
+  /** Correct review answers needed to master a mistake. */
+  masteryThreshold: number;
+}
+
+function createInitialState(config: PracticeConfig, masteryThreshold: number): SessionState {
+  const first =
+    nextQuestion({ config, patterns: appData.loadMistakePatterns(), masteryThreshold }) ??
+    // Only reachable if review mode starts with no mistakes; the page prevents that
+    generateQuestion(config);
+  return createInitialSessionState(config, first);
 }
 
 /**
  * Runs one practice session. Questions are generated in event handlers,
- * never during render. Every answer is saved as soon as it is recorded.
+ * never during render. Every answer is saved right away, along with the
+ * mistake patterns it creates or updates.
  */
-export function usePracticeSession(config: PracticeConfig) {
-  const [state, dispatch] = useReducer(sessionReducer, config, (initialConfig) =>
-    createInitialSessionState(initialConfig, generateQuestion(initialConfig)),
+export function usePracticeSession(config: PracticeConfig, { masteryThreshold }: SessionOptions) {
+  const [state, dispatch] = useReducer(sessionReducer, undefined, () =>
+    createInitialState(config, masteryThreshold),
   );
 
-  // Run the (pure) reducer here too, so we know exactly what to save
   const apply = useCallback(
-    (action: SessionAction) => {
-      persistChanges(state, sessionReducer(state, action));
+    (action: SessionAction, save?: () => void) => {
+      // Run the (pure) reducer here too, so we only save real changes
+      const after = sessionReducer(state, action);
+      if (after !== state) {
+        save?.();
+        appData.saveSession(after.session);
+      }
       dispatch(action);
     },
     [state],
@@ -41,15 +53,25 @@ export function usePracticeSession(config: PracticeConfig) {
     (result: SelfReportedResult, selectedAnswer: number) => {
       const { session, currentQuestion } = state;
       if (!session.isActive) return;
+
       const now = new Date().toISOString();
       const attempt = createAttempt(session, currentQuestion, selectedAnswer, result, now);
-      // No need for a new question if this was the last one
-      const nextQuestion = isLastQuestion(session)
-        ? currentQuestion
-        : generateQuestion({ ...config, avoid: currentQuestion });
-      apply({ type: 'recordAttempt', attempt, nextQuestion, now });
+      const patterns = applyAttemptToPatterns(appData.loadMistakePatterns(), attempt, {
+        now,
+        masteryThreshold,
+      });
+      // Pick the next question from the updated patterns, so a just-mastered
+      // mistake isn't asked again
+      const next = isLastQuestion(session)
+        ? null
+        : nextQuestion({ config, previous: currentQuestion, patterns, masteryThreshold, now });
+
+      apply({ type: 'recordAttempt', attempt, nextQuestion: next, now }, () => {
+        appData.saveAttempt(attempt);
+        appData.saveMistakePatterns(patterns);
+      });
     },
-    [state, config, apply],
+    [state, config, masteryThreshold, apply],
   );
 
   const endSession = useCallback(() => {

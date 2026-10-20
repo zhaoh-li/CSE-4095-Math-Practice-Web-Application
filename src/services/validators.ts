@@ -8,6 +8,7 @@ import {
   type ColorVisionMode,
   type DifficultyLevel,
   type MathOperation,
+  type MistakePattern,
   type PracticeAttempt,
   type PracticeSession,
   type SessionLength,
@@ -69,6 +70,25 @@ export function isStoredAttempt(value: unknown): value is PracticeAttempt {
     (value.source === 'regular' || value.source === 'mistake-review') &&
     isOptionalString(value.mistakePatternId) &&
     isString(value.answeredAt)
+  );
+}
+
+export function isStoredMistakePattern(value: unknown): value is MistakePattern {
+  if (!isRecord(value)) return false;
+  return (
+    isString(value.id) &&
+    isMathOperation(value.operation) &&
+    isCount(value.firstOperand) &&
+    isCount(value.secondOperand) &&
+    isCount(value.correctAnswer) &&
+    isDifficultyLevel(value.difficulty) &&
+    isCount(value.incorrectCount) &&
+    (value.incorrectCount as number) >= 1 &&
+    isCount(value.similarCorrectCount) &&
+    typeof value.isMastered === 'boolean' &&
+    isString(value.createdAt) &&
+    isString(value.lastIncorrectAt) &&
+    isOptionalString(value.masteredAt)
   );
 }
 

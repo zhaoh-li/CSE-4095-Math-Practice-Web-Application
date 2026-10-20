@@ -1,5 +1,5 @@
 import type { DifficultyLevel, MathOperation } from './question';
-import type { SessionLength } from './session';
+import type { PracticeMode, SessionLength } from './session';
 
 export interface PerformanceTotals {
   attempted: number;
@@ -15,6 +15,7 @@ export type DifficultyStatistics = Record<DifficultyLevel, PerformanceTotals>;
 
 export interface RecentSessionSummary {
   sessionId: string;
+  mode: PracticeMode;
   /** ISO 8601 timestamp. */
   completedAt: string;
   operations: MathOperation[];
