@@ -1,0 +1,5 @@
+dist
+coverage
+node_modules
+package-lock.json
+math_practice_app_todo.md
