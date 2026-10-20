@@ -6,6 +6,8 @@ export interface AppSettings {
   cardAnimationsEnabled: boolean;
   showExplanations: boolean;
   feedbackEffectsEnabled: boolean;
+  /** Uses a color-blind-safe palette and adds non-color cues. */
+  colorBlindMode: boolean;
   defaultSessionLength: SessionLength;
   defaultDifficulty: DifficultyLevel;
   defaultOperations: MathOperation[];

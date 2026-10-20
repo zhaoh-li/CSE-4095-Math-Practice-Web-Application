@@ -28,7 +28,7 @@ describe('App routing', () => {
   });
 
   it.each([
-    ['Start Practice', 'Practice Setup'],
+    ['Start Practice', 'Set Up Your Practice'],
     ['View Statistics', 'Statistics'],
   ])('goes to the right page when "%s" is clicked', async (buttonText, pageTitle) => {
     const user = userEvent.setup();
@@ -46,7 +46,7 @@ describe('App routing', () => {
   });
 
   it.each([
-    ['/practice/setup', 'Practice Setup'],
+    ['/practice/setup', 'Set Up Your Practice'],
     ['/practice/session', 'Practice Session'],
     ['/practice/summary', 'Session Summary'],
     ['/statistics', 'Statistics'],

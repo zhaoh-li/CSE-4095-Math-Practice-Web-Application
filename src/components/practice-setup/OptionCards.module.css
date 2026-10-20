@@ -1,0 +1,157 @@
+/* Shared styles for the selectable cards on the practice setup page. */
+
+.fieldset {
+  margin: 0 0 var(--space-8);
+  padding: 0;
+  border: none;
+}
+
+.legendRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
+.legend {
+  padding: 0;
+  margin-bottom: var(--space-3);
+  font-family: var(--font-heading);
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  color: var(--color-heading);
+}
+
+.hint {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.grid {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.cols4 {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.cols2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-height: 4.5rem;
+  padding: var(--space-4);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius);
+  background-color: var(--color-surface);
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.card:hover {
+  background-color: var(--color-secondary-hover);
+}
+
+/* Keyboard focus lands on the hidden input; show the ring on the card */
+.card:has(input:focus-visible) {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 3px;
+}
+
+/* Selected: thicker border, tinted fill, and a check mark (not color alone) */
+.selected {
+  border-width: 3px;
+  border-color: var(--color-selected-border);
+  background-color: var(--color-selected-bg);
+}
+
+.selected:hover {
+  background-color: var(--color-selected-bg);
+}
+
+.centered {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.symbol {
+  font-family: var(--font-heading);
+  font-size: 2.25rem;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.title {
+  font-weight: 800;
+  font-size: var(--font-size-base);
+}
+
+.badge {
+  align-self: flex-start;
+  padding: 0 var(--space-2);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  background-color: var(--color-surface);
+}
+
+.description {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+.check {
+  position: absolute;
+  top: var(--space-2);
+  right: var(--space-2);
+  display: grid;
+  place-items: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border: 2px solid var(--color-border);
+  border-radius: 50%;
+  background-color: var(--color-surface);
+  font-size: 1rem;
+  font-weight: 900;
+  line-height: 1;
+  color: transparent;
+}
+
+.selected .check {
+  border-color: var(--color-selected-border);
+  background-color: var(--color-primary-border);
+  color: #ffffff;
+}
+
+@media (max-width: 720px) {
+  .cols4 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  .cols2 {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card {
+    transition: none;
+  }
+}

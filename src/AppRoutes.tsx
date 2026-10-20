@@ -3,6 +3,8 @@ import { AppLayout } from './components/layout/AppLayout';
 import { HomePage } from './pages/HomePage';
 import { NotFoundPage } from './pages/NotFoundPage';
 import { PlaceholderPage } from './pages/PlaceholderPage';
+import { PracticeSessionPage } from './pages/PracticeSessionPage';
+import { PracticeSetupPage } from './pages/PracticeSetupPage';
 
 export function AppRoutes() {
   return (
@@ -10,24 +12,8 @@ export function AppRoutes() {
       <Route element={<AppLayout />}>
         <Route index element={<HomePage />} />
         <Route path="practice">
-          <Route
-            path="setup"
-            element={
-              <PlaceholderPage
-                title="Practice Setup"
-                description="Choose operations, difficulty, and session length. Coming soon!"
-              />
-            }
-          />
-          <Route
-            path="session"
-            element={
-              <PlaceholderPage
-                title="Practice Session"
-                description="Flash cards are coming soon!"
-              />
-            }
-          />
+          <Route path="setup" element={<PracticeSetupPage />} />
+          <Route path="session" element={<PracticeSessionPage />} />
           <Route
             path="summary"
             element={
