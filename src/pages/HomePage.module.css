@@ -1,0 +1,39 @@
+.hero {
+  text-align: center;
+  padding-block: var(--space-8);
+}
+
+.intro {
+  max-width: 34rem;
+  margin: 0 auto var(--space-8);
+  font-size: var(--font-size-lg);
+  color: var(--color-text-muted);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-4);
+  max-width: 40rem;
+  margin: 0 auto;
+}
+
+.actions > * {
+  flex: 1 1 11rem;
+}
+
+@media (max-width: 480px) {
+  .hero {
+    padding-block: var(--space-4);
+  }
+
+  .actions {
+    flex-direction: column;
+  }
+
+  .actions > * {
+    flex: none;
+    width: 100%;
+  }
+}
