@@ -8,6 +8,26 @@ Vite. The build plan lives in [math_practice_app_todo.md](math_practice_app_todo
 
 ## Getting Started
 
+
+### How to run (in simple terms)
+
+1. Download the latest release(should be V1.0.0)
+
+2. Unzip the file and put the contents into a directory that a terminal can access
+
+3. You need to run the command "npm run dev" to start the local server
+
+4. If you get "> math-practice-app@0.0.0 dev
+
+        > vite
+
+
+        sh: 1: vite: not found"
+
+then you need to run "npm install" to install npm.
+
+5. After that if no error occurs, the website should run on a local port
+
 ### 1. Install Node.js (version 24)
 
 The app is built with Node.js, which comes with **npm**, the tool that installs the project's
