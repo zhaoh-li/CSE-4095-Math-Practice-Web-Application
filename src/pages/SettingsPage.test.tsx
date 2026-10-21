@@ -1,17 +1,12 @@
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { MemoryRouter } from 'react-router';
-import { AppRoutes } from '../AppRoutes';
+import { TestApp } from '../test/TestApp';
 import { DEFAULT_SETTINGS } from '../config/defaultSettings';
 import { appData } from '../services/appData';
 
 function renderAt(path = '/settings') {
   const user = userEvent.setup();
-  const utils = render(
-    <MemoryRouter initialEntries={[path]}>
-      <AppRoutes />
-    </MemoryRouter>,
-  );
+  const utils = render(<TestApp initialEntries={[path]} />);
   return { user, ...utils };
 }
 

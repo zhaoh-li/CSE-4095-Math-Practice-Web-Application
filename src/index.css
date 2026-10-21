@@ -240,6 +240,8 @@
 body {
   margin: 0;
   min-height: 100vh;
+  /* Safety net: nothing should ever make the whole page scroll sideways */
+  overflow-x: clip;
   font-size: var(--font-size-base);
   background-color: var(--color-bg);
   /* Blue glow in the top-left; pink and green blend in the bottom-right */

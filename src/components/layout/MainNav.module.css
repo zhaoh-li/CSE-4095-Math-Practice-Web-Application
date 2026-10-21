@@ -8,7 +8,11 @@
 }
 
 .link {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  /* At least 44px tall: an easy target for small fingers */
+  min-height: 2.75rem;
   padding: var(--space-2) var(--space-3);
   border: 2px solid transparent;
   border-radius: var(--radius-sm);
@@ -33,4 +37,35 @@
 
 .active:hover {
   background-color: var(--color-primary-hover);
+}
+
+.icon {
+  font-size: 1.1em;
+  line-height: 1;
+}
+
+/* Phones: the nav becomes a full-width row of four equal buttons, icon above label */
+@media (max-width: 560px) {
+  nav[aria-label='Main'] {
+    width: 100%;
+  }
+
+  .list {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .link {
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    min-height: 3.25rem;
+    padding: var(--space-1);
+    font-size: 0.875rem;
+    text-align: center;
+  }
+
+  .icon {
+    font-size: 1.35rem;
+  }
 }

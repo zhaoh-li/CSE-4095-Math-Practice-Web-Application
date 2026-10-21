@@ -1,6 +1,6 @@
 import { useCallback, useReducer } from 'react';
 import { appData } from '../services/appData';
-import type { PracticeConfig, SelfReportedResult } from '../types';
+import type { ActiveSessionSnapshot, PracticeConfig, SelfReportedResult } from '../types';
 import { applyAttemptToPatterns } from '../utils/mistakes/mistakePatterns';
 import { generateQuestion } from '../utils/questions/generateQuestion';
 import { nextQuestion } from '../utils/session/nextQuestion';
@@ -16,6 +16,8 @@ import {
 interface SessionOptions {
   /** Correct review answers needed to master a mistake. */
   masteryThreshold: number;
+  /** Pick up an unfinished session instead of starting a new one. */
+  restore?: ActiveSessionSnapshot | null;
 }
 
 function createInitialState(config: PracticeConfig, masteryThreshold: number): SessionState {
@@ -31,9 +33,15 @@ function createInitialState(config: PracticeConfig, masteryThreshold: number): S
  * never during render. Every answer is saved right away, along with the
  * mistake patterns it creates or updates.
  */
-export function usePracticeSession(config: PracticeConfig, { masteryThreshold }: SessionOptions) {
+export function usePracticeSession(
+  config: PracticeConfig,
+  { masteryThreshold, restore }: SessionOptions,
+) {
   const [state, dispatch] = useReducer(sessionReducer, undefined, () =>
-    createInitialState(config, masteryThreshold),
+    restore
+      ? // Earlier answers are already saved; only the current question is needed
+        { session: restore.session, currentQuestion: restore.currentQuestion, attempts: [] }
+      : createInitialState(config, masteryThreshold),
   );
 
   const apply = useCallback(

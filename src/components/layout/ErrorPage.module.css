@@ -1,0 +1,16 @@
+.error {
+  text-align: center;
+  padding-block: var(--space-8);
+}
+
+.icon {
+  margin: 0;
+  font-size: 3.5rem;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-3);
+}

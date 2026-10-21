@@ -1,14 +1,9 @@
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { MemoryRouter } from 'react-router';
-import { AppRoutes } from './AppRoutes';
+import { TestApp } from './test/TestApp';
 
 function renderAt(path: string) {
-  return render(
-    <MemoryRouter initialEntries={[path]}>
-      <AppRoutes />
-    </MemoryRouter>,
-  );
+  return render(<TestApp initialEntries={[path]} />);
 }
 
 describe('App routing', () => {

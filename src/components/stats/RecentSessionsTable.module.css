@@ -43,3 +43,67 @@
 .accuracy {
   font-weight: 800;
 }
+
+/* Phones: each row becomes a card with "label: value" lines, so nothing scrolls sideways */
+@media (max-width: 640px) {
+  .scroller {
+    overflow-x: visible;
+    border: none;
+    background: none;
+    box-shadow: none;
+  }
+
+  .table {
+    min-width: 0;
+  }
+
+  .table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+
+  .table tbody {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .table tr {
+    display: block;
+    padding: var(--space-3) var(--space-4);
+    border: 2px solid var(--color-border-soft);
+    border-radius: var(--radius);
+    background-color: var(--color-surface);
+    box-shadow: var(--shadow);
+  }
+
+  .table tbody tr + tr {
+    border-top: 2px solid var(--color-border-soft);
+  }
+
+  .table tbody th {
+    display: block;
+    padding: 0 0 var(--space-2);
+    font-size: var(--font-size-lg);
+  }
+
+  .table td {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-4);
+    padding: var(--space-1) 0;
+    white-space: normal;
+    text-align: right;
+  }
+
+  .table td::before {
+    content: attr(data-label);
+    flex-shrink: 0;
+    font-weight: 700;
+    color: var(--color-text-muted);
+    text-align: left;
+  }
+}

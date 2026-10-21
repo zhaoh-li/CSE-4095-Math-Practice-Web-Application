@@ -19,6 +19,7 @@ export function PracticeSetupPage() {
   const notice = typeof routeState?.notice === 'string' ? routeState.notice : null;
   const { settings } = useSettings();
   const [patterns] = useState(() => appData.loadMistakePatterns());
+  const [unfinished, setUnfinished] = useState(() => appData.loadActiveSession());
   const activeMistakeCount = activePatterns(patterns).length;
 
   // Coming back from a session ("Change Settings") keeps the previous choices;
@@ -40,6 +41,8 @@ export function PracticeSetupPage() {
     event.preventDefault();
     if (!canStart) return;
     const finalConfig = isReview ? createReviewConfig(patterns, config) : config;
+    // Starting fresh closes any unfinished session
+    appData.abandonActiveSession();
     navigate('/practice/session', { state: { config: finalConfig } });
   }
 
@@ -60,6 +63,34 @@ export function PracticeSetupPage() {
         <p className={styles.notice} role="status">
           {notice}
         </p>
+      )}
+      {unfinished && (
+        <div className={styles.resume} role="region" aria-labelledby="resume-title">
+          <h2 id="resume-title" className={styles.resumeTitle}>
+            <span aria-hidden="true">⏸️ </span>You have an unfinished session
+          </h2>
+          <p>
+            You were on question {unfinished.session.currentQuestionIndex + 1}
+            {unfinished.session.sessionLength === 'continuous'
+              ? ''
+              : ` of ${unfinished.session.sessionLength}`}
+            . Want to keep going?
+          </p>
+          <div className={styles.resumeActions}>
+            <Button onClick={() => navigate('/practice/session', { state: { resume: true } })}>
+              Continue Session
+            </Button>
+            <Button
+              variant="secondary"
+              onClick={() => {
+                appData.abandonActiveSession();
+                setUnfinished(null);
+              }}
+            >
+              Start Over
+            </Button>
+          </div>
+        </div>
       )}
       <p className={styles.intro}>Choose what you want to practice, then press Start!</p>
 

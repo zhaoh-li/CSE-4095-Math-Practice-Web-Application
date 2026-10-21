@@ -21,6 +21,11 @@ export default defineConfig([
       globals: globals.browser,
     },
   },
+  {
+    // The route list is configuration, not a hot-reloaded component module
+    files: ['src/routes.tsx'],
+    rules: { 'react-refresh/only-export-components': 'off' },
+  },
   // Turns off style rules that conflict with Prettier. Keep this last.
   prettier,
 ]);

@@ -2,6 +2,7 @@ import { DIFFICULTY_RULES, type NumberRange } from '../../config/difficultyRules
 import type { DifficultyLevel, MathOperation, MistakePattern, Question } from '../../types';
 import { pickRandom, type RandomSource } from '../random';
 import { buildQuestion, calculateAnswer, type QuestionFacts } from '../questions/buildQuestion';
+import { getQuestionErrors } from '../questions/validateQuestion';
 
 export type SimilarityStrategy = 'nearby' | 'reversed' | 'fact-family';
 
@@ -158,9 +159,19 @@ export function generateSimilarQuestion(
     chosen = facts(pattern.operation, pattern.firstOperand, pattern.secondOperand);
   }
 
-  return {
-    ...buildQuestion(chosen, pattern.difficulty, random),
-    source: 'mistake-review',
-    mistakePatternId: pattern.id,
-  };
+  let built = buildQuestion(chosen, pattern.difficulty, random);
+  const errors = getQuestionErrors(built);
+  if (errors.length > 0) {
+    // Should never happen, but a broken question must not reach the student
+    if (import.meta.env.DEV) {
+      console.warn('[generateSimilarQuestion] Invalid question, using the original:', errors);
+    }
+    built = buildQuestion(
+      facts(pattern.operation, pattern.firstOperand, pattern.secondOperand),
+      pattern.difficulty,
+      random,
+    );
+  }
+
+  return { ...built, source: 'mistake-review', mistakePatternId: pattern.id };
 }

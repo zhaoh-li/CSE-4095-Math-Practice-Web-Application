@@ -155,7 +155,9 @@ describe('calculateAppStatistics', () => {
     const sessions = Array.from({ length: 15 }, (_, i) =>
       session(`s${i}`, `2026-10-${String(i + 1).padStart(2, '0')}T10:00:00.000Z`, 1, 0),
     );
-    expect(calculateAppStatistics([], sessions, [], 10).recentSessions).toHaveLength(10);
+    expect(
+      calculateAppStatistics([], sessions, [], { recentLimit: 10 }).recentSessions,
+    ).toHaveLength(10);
   });
 });
 

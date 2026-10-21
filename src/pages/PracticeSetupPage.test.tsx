@@ -1,15 +1,10 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { MemoryRouter } from 'react-router';
-import { AppRoutes } from '../AppRoutes';
+import { TestApp } from '../test/TestApp';
 
 function renderSetup() {
   const user = userEvent.setup();
-  render(
-    <MemoryRouter initialEntries={['/practice/setup']}>
-      <AppRoutes />
-    </MemoryRouter>,
-  );
+  render(<TestApp initialEntries={['/practice/setup']} />);
   return user;
 }
 

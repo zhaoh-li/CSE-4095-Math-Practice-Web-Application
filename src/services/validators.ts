@@ -8,11 +8,15 @@ import {
   type ColorVisionMode,
   type DifficultyLevel,
   type MathOperation,
+  type ActiveSessionSnapshot,
   type MistakePattern,
   type PracticeAttempt,
   type PracticeSession,
   type SessionLength,
 } from '../types';
+import type { AttemptArchive } from '../utils/attemptArchive';
+import { isPracticeConfig } from '../utils/practiceConfig';
+import { getQuestionErrors } from '../utils/questions/validateQuestion';
 import type { ReadResult } from './storage';
 
 type UnknownRecord = Record<string, unknown>;
@@ -90,6 +94,42 @@ export function isStoredMistakePattern(value: unknown): value is MistakePattern 
     isString(value.lastIncorrectAt) &&
     isOptionalString(value.masteredAt)
   );
+}
+
+export function isActiveSessionSnapshot(value: unknown): value is ActiveSessionSnapshot {
+  if (!isRecord(value)) return false;
+  const { selectedAnswer, isCardFlipped, currentQuestion } = value;
+  if (!isRecord(currentQuestion) || !Array.isArray(currentQuestion.choices)) return false;
+  return (
+    isString(value.routeKey) &&
+    isPracticeConfig(value.config) &&
+    isStoredSession(value.session) &&
+    value.session.isActive &&
+    getQuestionErrors(currentQuestion as never).length === 0 &&
+    (selectedAnswer === null || currentQuestion.choices.includes(selectedAnswer)) &&
+    typeof isCardFlipped === 'boolean' &&
+    // The card can only be flipped after an answer is picked
+    (!isCardFlipped || selectedAnswer !== null) &&
+    isString(value.savedAt)
+  );
+}
+
+export function parseAttemptArchive(raw: unknown): ReadResult<AttemptArchive> {
+  const empty = { counts: {}, archivedCount: 0 };
+  if (!isRecord(raw) || !isRecord(raw.counts) || !isCount(raw.archivedCount)) {
+    return { value: empty, problem: 'invalid' };
+  }
+  const keyPattern =
+    /^(addition|subtraction|multiplication|division)\|(beginner|easy|intermediate|advanced)\|(regular|mistake-review)$/;
+  const valid = Object.entries(raw.counts).every(
+    ([key, count]) =>
+      keyPattern.test(key) && isRecord(count) && isCount(count.correct) && isCount(count.incorrect),
+  );
+  return valid
+    ? {
+        value: { counts: raw.counts as AttemptArchive['counts'], archivedCount: raw.archivedCount },
+      }
+    : { value: empty, problem: 'invalid' };
 }
 
 /** Keeps the valid items of a stored list and reports if any were dropped. */
