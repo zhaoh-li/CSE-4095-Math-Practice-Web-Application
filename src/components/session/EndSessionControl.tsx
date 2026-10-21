@@ -42,7 +42,12 @@ export function EndSessionControl({ needsConfirmation, onEnd }: EndSessionContro
 
   return (
     <div className={styles.wrapper}>
-      <div className={styles.confirm} role="group" aria-labelledby="end-session-question">
+      <div
+        className={styles.confirm}
+        role="group"
+        aria-labelledby="end-session-question"
+        data-pauses-shortcuts
+      >
         <p id="end-session-question" className={styles.question}>
           End this session and see how you did?
         </p>

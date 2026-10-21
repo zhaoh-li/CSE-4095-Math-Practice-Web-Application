@@ -47,3 +47,10 @@
   background-color: var(--color-selected-bg);
   font-weight: 700;
 }
+
+.tip {
+  max-width: 34rem;
+  margin: var(--space-8) auto 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}

@@ -130,6 +130,7 @@ export function parseSettings(raw: unknown): ReadResult<AppSettings> {
   const settings: AppSettings = {
     soundEffectsEnabled: pick('soundEffectsEnabled', isBoolean),
     cardAnimationsEnabled: pick('cardAnimationsEnabled', isBoolean),
+    keyboardShortcutsEnabled: pick('keyboardShortcutsEnabled', isBoolean),
     showExplanations: pick('showExplanations', isBoolean),
     feedbackEffectsEnabled: pick('feedbackEffectsEnabled', isBoolean),
     colorVisionMode: pick('colorVisionMode', isColorVisionMode),

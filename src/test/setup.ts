@@ -5,4 +5,5 @@ import '@testing-library/jest-dom/vitest';
 afterEach(() => {
   window.localStorage.clear();
   delete document.documentElement.dataset.colorVision;
+  delete document.documentElement.dataset.animations;
 });

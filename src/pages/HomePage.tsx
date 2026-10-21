@@ -1,9 +1,12 @@
 import { useLocation } from 'react-router';
 import { ButtonLink } from '../components/ui/Button';
+import { KeyHint } from '../components/ui/KeyHint';
+import { useSettings } from '../context/SettingsContext';
 import styles from './HomePage.module.css';
 
 export function HomePage() {
   const location = useLocation();
+  const { settings } = useSettings();
   const notice = (location.state as { notice?: unknown } | null)?.notice;
 
   return (
@@ -27,6 +30,13 @@ export function HomePage() {
           Settings
         </ButtonLink>
       </div>
+      {settings.keyboardShortcutsEnabled && (
+        <p className={styles.tip}>
+          <span aria-hidden="true">⌨️ </span>
+          Tip: you can practice with your keyboard! Press <KeyHint decorative={false}>?</KeyHint> on
+          a flash card to see the shortcuts.
+        </p>
+      )}
     </section>
   );
 }

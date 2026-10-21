@@ -4,6 +4,7 @@ export const DEFAULT_SETTINGS: AppSettings = {
   // Off until the app has sounds
   soundEffectsEnabled: false,
   cardAnimationsEnabled: true,
+  keyboardShortcutsEnabled: true,
   showExplanations: true,
   feedbackEffectsEnabled: true,
   colorVisionMode: 'off',
