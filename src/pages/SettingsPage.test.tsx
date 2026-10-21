@@ -19,7 +19,7 @@ describe('SettingsPage', () => {
   it('shows every setting with its current value', () => {
     renderAt();
     expect(screen.getByRole('radio', { name: 'Standard' })).toBeChecked();
-    expect(screen.getByRole('switch', { name: /card animations/i })).toBeChecked();
+    expect(screen.getByRole('switch', { name: /^animations/i })).toBeChecked();
     expect(screen.getByRole('switch', { name: /sound effects/i })).not.toBeChecked();
     expect(screen.getByRole('switch', { name: /show explanations/i })).toBeChecked();
     expect(screen.getByRole('checkbox', { name: 'Addition' })).toBeChecked();
@@ -29,7 +29,7 @@ describe('SettingsPage', () => {
 
   it('saves changes automatically', async () => {
     const { user } = renderAt();
-    await user.click(screen.getByRole('switch', { name: /card animations/i }));
+    await user.click(screen.getByRole('switch', { name: /^animations/i }));
     await user.click(screen.getByRole('radio', { name: 'Advanced' }));
     await user.click(screen.getByRole('radio', { name: '20 questions' }));
     await user.click(screen.getByRole('checkbox', { name: 'Division' }));

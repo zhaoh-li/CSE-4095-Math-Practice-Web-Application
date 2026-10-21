@@ -16,6 +16,13 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     else root.dataset.colorVision = settings.colorVisionMode;
   }, [settings.colorVisionMode]);
 
+  // Turning animations off stops movement across the whole app (see index.css)
+  useEffect(() => {
+    const root = document.documentElement;
+    if (settings.cardAnimationsEnabled) delete root.dataset.animations;
+    else root.dataset.animations = 'off';
+  }, [settings.cardAnimationsEnabled]);
+
   const save = useCallback((next: AppSettings) => {
     setSettings(next);
     const result = appData.saveSettings(next);

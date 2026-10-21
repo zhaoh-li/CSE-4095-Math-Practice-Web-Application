@@ -3,6 +3,7 @@ import { Navigate, useLocation, useNavigate } from 'react-router';
 import { QuestionCard } from '../components/question-card/QuestionCard';
 import { EndSessionControl } from '../components/session/EndSessionControl';
 import { SessionProgress } from '../components/session/SessionProgress';
+import { ShortcutHelp } from '../components/session/ShortcutHelp';
 import { useSettings } from '../context/SettingsContext';
 import { usePracticeSession } from '../hooks/usePracticeSession';
 import { appData } from '../services/appData';
@@ -40,7 +41,17 @@ function PracticeRunner({ config }: { config: PracticeConfig }) {
     masteryThreshold: settings.masteryThreshold,
   });
 
+  const [isHelpOpen, setIsHelpOpen] = useState(false);
+
   const totalQuestions = session.sessionLength === 'continuous' ? null : session.sessionLength;
+  const questionNumber = session.currentQuestionIndex + 1;
+  // Spoken when a new card appears (focus then moves to the question itself)
+  const progressAnnouncement =
+    session.currentQuestionIndex === 0
+      ? ''
+      : totalQuestions === null
+        ? `Question ${questionNumber}.`
+        : `Question ${questionNumber} of ${totalQuestions}.`;
 
   // When the session finishes, show the summary. Replace so Back goes to setup.
   useEffect(() => {
@@ -69,8 +80,11 @@ function PracticeRunner({ config }: { config: PracticeConfig }) {
           <span aria-hidden="true">🔁 </span>Practicing your mistakes
         </p>
       )}
+      <p className="visually-hidden" aria-live="polite" aria-atomic="true">
+        {progressAnnouncement}
+      </p>
       <SessionProgress
-        questionNumber={session.currentQuestionIndex + 1}
+        questionNumber={questionNumber}
         answeredCount={session.attemptedCount}
         totalQuestions={totalQuestions}
       />
@@ -79,8 +93,12 @@ function PracticeRunner({ config }: { config: PracticeConfig }) {
         question={currentQuestion}
         onResult={recordResult}
         animationsEnabled={settings.cardAnimationsEnabled}
+        shortcutsEnabled={settings.keyboardShortcutsEnabled}
         autoFocus={session.currentQuestionIndex > 0}
       />
+      {settings.keyboardShortcutsEnabled && (
+        <ShortcutHelp open={isHelpOpen} onOpenChange={setIsHelpOpen} />
+      )}
       <EndSessionControl needsConfirmation={session.attemptedCount > 0} onEnd={handleEnd} />
     </section>
   );

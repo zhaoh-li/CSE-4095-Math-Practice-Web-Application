@@ -8,10 +8,19 @@ interface AnswerChoiceProps {
   isSelected: boolean;
   disabled: boolean;
   onSelect: (value: number) => void;
+  /** Tells assistive tech that the number key picks this answer. */
+  shortcutEnabled?: boolean;
 }
 
 /** One multiple-choice answer, shown as a large button. */
-export function AnswerChoice({ value, index, isSelected, disabled, onSelect }: AnswerChoiceProps) {
+export function AnswerChoice({
+  value,
+  index,
+  isSelected,
+  disabled,
+  onSelect,
+  shortcutEnabled = false,
+}: AnswerChoiceProps) {
   const formatted = formatNumber(value);
   return (
     <button
@@ -19,6 +28,7 @@ export function AnswerChoice({ value, index, isSelected, disabled, onSelect }: A
       className={`${styles.choice} ${isSelected ? styles.choiceSelected : ''}`}
       aria-pressed={isSelected}
       aria-label={`Choice ${index + 1}: ${formatted}`}
+      aria-keyshortcuts={shortcutEnabled ? String(index + 1) : undefined}
       disabled={disabled}
       onClick={() => onSelect(value)}
     >

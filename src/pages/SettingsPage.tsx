@@ -93,10 +93,16 @@ export function SettingsPage() {
         />
         <div className={styles.toggles}>
           <ToggleSwitch
-            label="Card animations"
-            description="Flip and slide the flash cards. Turn off for instant changes."
+            label="Animations"
+            description="Flip and slide the flash cards, and other movement. Turn off for instant changes."
             checked={settings.cardAnimationsEnabled}
             onChange={(cardAnimationsEnabled) => change({ cardAnimationsEnabled })}
+          />
+          <ToggleSwitch
+            label="Keyboard shortcuts"
+            description="On flash cards: 1–4 pick an answer, F flips, R or W says right or wrong, ? shows the list. Turn off if keys get pressed by accident."
+            checked={settings.keyboardShortcutsEnabled}
+            onChange={(keyboardShortcutsEnabled) => change({ keyboardShortcutsEnabled })}
           />
           <ToggleSwitch
             label="Sound effects"

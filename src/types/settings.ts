@@ -8,6 +8,8 @@ export type ColorVisionMode = (typeof COLOR_VISION_MODES)[number];
 export interface AppSettings {
   soundEffectsEnabled: boolean;
   cardAnimationsEnabled: boolean;
+  /** Number and letter keys on flash cards (1–4, F, R, W, ?). */
+  keyboardShortcutsEnabled: boolean;
   showExplanations: boolean;
   feedbackEffectsEnabled: boolean;
   /** Swaps the whole color theme for one suited to a type of color vision. */

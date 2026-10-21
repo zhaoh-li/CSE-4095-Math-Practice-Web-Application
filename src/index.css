@@ -281,6 +281,14 @@ p {
   outline-offset: 3px;
 }
 
+/* Animations turned off in Settings: no movement anywhere */
+:root[data-animations='off'] *,
+:root[data-animations='off'] *::before,
+:root[data-animations='off'] *::after {
+  animation: none !important;
+  transition: none !important;
+}
+
 /* <main> receives focus from the skip link; no ring needed there */
 main:focus {
   outline: none;
