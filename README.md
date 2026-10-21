@@ -13,6 +13,9 @@ The build plan lives in [math_practice_app_todo.md](math_practice_app_todo.md).
 - Accessibility: keyboard shortcuts (1–4, F, R, W, ?), screen-reader announcements,
   color vision themes (red-green, blue-yellow, high contrast), reduced motion
 - Unfinished sessions survive a refresh; leaving mid-session asks first
+- A rising chime for correct answers, generated in the browser (no audio files)
+- "How to solve it" explanations: dot pictures and rules for small problems, break-apart
+  steps (make a ten, tens and ones, split the big number…) for larger ones
 
 ## Privacy
 

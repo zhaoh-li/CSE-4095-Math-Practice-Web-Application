@@ -431,3 +431,36 @@ describe('unfinished session snapshot', () => {
     });
   });
 });
+
+describe('v1 → v2 migration (sound effects arrive)', () => {
+  it('turns sound on once for settings saved before sounds existed', () => {
+    const backend = createMemoryStorage();
+    backend.setItem(`${STORAGE_PREFIX}schemaVersion`, '1');
+    backend.setItem(
+      `${STORAGE_PREFIX}settings`,
+      JSON.stringify({
+        ...DEFAULT_SETTINGS,
+        soundEffectsEnabled: false,
+        defaultDifficulty: 'easy',
+      }),
+    );
+    const data = createAppData(createStorageService(backend));
+    expect(data.loadSettings()).toMatchObject({
+      soundEffectsEnabled: true,
+      defaultDifficulty: 'easy',
+    });
+    expect(raw(backend, 'schemaVersion')).toBe('2');
+  });
+
+  it('respects turning sound off after the upgrade', () => {
+    const backend = createMemoryStorage();
+    backend.setItem(`${STORAGE_PREFIX}schemaVersion`, '1');
+    backend.setItem(`${STORAGE_PREFIX}settings`, JSON.stringify(DEFAULT_SETTINGS));
+    const data = createAppData(createStorageService(backend));
+    data.saveSettings({ ...data.loadSettings(), soundEffectsEnabled: false });
+    // Opening the app again does not switch it back on
+    expect(createAppData(createStorageService(backend)).loadSettings().soundEffectsEnabled).toBe(
+      false,
+    );
+  });
+});

@@ -34,7 +34,7 @@ export const STORAGE_KEYS = {
 } as const;
 
 /** Bump this and add a migration whenever the stored data shape changes. */
-export const CURRENT_SCHEMA_VERSION = 1;
+export const CURRENT_SCHEMA_VERSION = 2;
 
 /** Only the most recent sessions are kept in detail. */
 export const MAX_STORED_SESSIONS = 100;
@@ -50,11 +50,24 @@ export const ARCHIVE_BATCH = 500;
 /** Upgrades stored data from version N to N + 1. */
 export type Migration = (storage: StorageService) => void;
 
-/**
- * Migrations keyed by the version they upgrade FROM.
- * Example for a future change: `1: (storage) => { ...turn v1 data into v2... }`
- */
-export const MIGRATIONS: Record<number, Migration> = {};
+/** Migrations keyed by the version they upgrade FROM. */
+export const MIGRATIONS: Record<number, Migration> = {
+  /**
+   * v1 → v2: sound effects arrived. Before that, "Sound effects" was saved as
+   * off only because it did nothing yet, so switch it on once for everyone.
+   */
+  1: (storage) => {
+    const settings = storage.read<Record<string, unknown> | null>(
+      STORAGE_KEYS.settings,
+      (raw) =>
+        typeof raw === 'object' && raw !== null && !Array.isArray(raw)
+          ? { value: raw as Record<string, unknown> }
+          : { value: null },
+      null,
+    ).value;
+    if (settings) storage.write(STORAGE_KEYS.settings, { ...settings, soundEffectsEnabled: true });
+  },
+};
 
 export interface MigrationResult {
   fromVersion: number | null;

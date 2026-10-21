@@ -15,7 +15,7 @@ describe('SettingsPage', () => {
     renderAt();
     expect(screen.getByRole('radio', { name: 'Standard' })).toBeChecked();
     expect(screen.getByRole('switch', { name: /^animations/i })).toBeChecked();
-    expect(screen.getByRole('switch', { name: /sound effects/i })).not.toBeChecked();
+    expect(screen.getByRole('switch', { name: /sound effects/i })).toBeChecked();
     expect(screen.getByRole('switch', { name: /show explanations/i })).toBeChecked();
     expect(screen.getByRole('checkbox', { name: 'Addition' })).toBeChecked();
     expect(screen.getByRole('radio', { name: 'Beginner' })).toBeChecked();
