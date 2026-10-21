@@ -18,6 +18,7 @@ Vite. The build plan lives in [math_practice_app_todo.md](math_practice_app_todo
 3. You need to run the command "npm run dev" to start the local server
 
 4. If you get
+   
         "> math-practice-app@0.0.0 dev
 
         > vite
