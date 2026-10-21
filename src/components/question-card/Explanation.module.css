@@ -1,0 +1,171 @@
+.explanation {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+}
+
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-height: 2.75rem;
+  padding: var(--space-2) var(--space-4);
+  border: 2px solid var(--color-primary-border);
+  border-radius: 999px;
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.toggle:hover {
+  background-color: var(--color-secondary-hover);
+}
+
+.toggle[aria-expanded='true'] {
+  background-color: var(--color-selected-bg);
+}
+
+.panel {
+  width: 100%;
+  padding: var(--space-4);
+  border: 2px dashed var(--color-primary-border);
+  border-radius: var(--radius);
+  background-color: var(--color-surface);
+  text-align: left;
+}
+
+.title {
+  margin: 0 0 var(--space-3);
+  font-family: var(--font-heading);
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  color: var(--color-heading);
+  text-align: center;
+}
+
+/* Math steps: one per line, numbers lined up */
+.lines {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-family: var(--font-heading);
+  font-size: var(--font-size-lg);
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.lines li:last-child {
+  font-weight: 700;
+  color: var(--color-heading);
+}
+
+.caption {
+  margin: var(--space-3) 0 0;
+  text-align: center;
+  font-weight: 700;
+}
+
+/* ---------- Dot pictures ---------- */
+
+.picture {
+  display: flex;
+  justify-content: center;
+}
+
+.addRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+}
+
+.operator {
+  font-family: var(--font-heading);
+  font-size: 1.75rem;
+  font-weight: 600;
+}
+
+.dotGroup {
+  display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.3rem;
+  max-width: 14rem;
+}
+
+.dot {
+  display: inline-block;
+  width: 1.1rem;
+  height: 1.1rem;
+  border: 2px solid var(--color-primary-border);
+  border-radius: 50%;
+  background-color: var(--color-primary);
+}
+
+/* A taken-away dot: hollow with a cross, so it reads without color */
+.removed {
+  position: relative;
+  background-color: transparent;
+  border-style: dashed;
+}
+
+.removed::before,
+.removed::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: -15%;
+  width: 130%;
+  height: 2px;
+  background-color: var(--color-negative-border);
+}
+
+.removed::before {
+  transform: rotate(45deg);
+}
+
+.removed::after {
+  transform: rotate(-45deg);
+}
+
+.rows {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.rows .dotGroup {
+  flex-wrap: nowrap;
+  max-width: none;
+}
+
+.shareGroups {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-2);
+}
+
+.shareBox {
+  padding: var(--space-2);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  max-width: 7.5rem;
+}
+
+@media (max-width: 420px) {
+  .dot {
+    width: 0.85rem;
+    height: 0.85rem;
+  }
+}

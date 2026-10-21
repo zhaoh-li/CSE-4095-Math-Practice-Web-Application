@@ -1,8 +1,8 @@
 import type { AppSettings } from '../types';
 
 export const DEFAULT_SETTINGS: AppSettings = {
-  // Off until the app has sounds
-  soundEffectsEnabled: false,
+  // A chime when an answer is marked right
+  soundEffectsEnabled: true,
   cardAnimationsEnabled: true,
   keyboardShortcutsEnabled: true,
   showExplanations: true,

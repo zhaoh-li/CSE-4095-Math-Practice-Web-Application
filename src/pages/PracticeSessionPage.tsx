@@ -10,6 +10,7 @@ import { pickFeedbackMessage } from '../config/feedbackMessages';
 import { useSettings } from '../context/SettingsContext';
 import { usePracticeSession } from '../hooks/usePracticeSession';
 import { appData } from '../services/appData';
+import { playCorrectChime } from '../services/sound';
 import type { ActiveSessionSnapshot, PracticeConfig, SelfReportedResult } from '../types';
 import { activePatterns } from '../utils/mistakes/mistakePatterns';
 import { isPracticeConfig } from '../utils/practiceConfig';
@@ -132,6 +133,7 @@ function PracticeRunner({ config, routeKey, restore }: PracticeRunnerProps) {
 
   function handleResult(result: SelfReportedResult, selectedAnswer: number) {
     recordResult(result, selectedAnswer);
+    if (result === 'correct' && settings.soundEffectsEnabled) playCorrectChime();
     if (settings.feedbackEffectsEnabled) {
       setFeedback((previous) => ({
         id: (previous?.id ?? 0) + 1,
@@ -177,6 +179,7 @@ function PracticeRunner({ config, routeKey, restore }: PracticeRunnerProps) {
         onResult={handleResult}
         animationsEnabled={settings.cardAnimationsEnabled}
         shortcutsEnabled={settings.keyboardShortcutsEnabled}
+        showExplanation={settings.showExplanations}
         autoFocus={session.currentQuestionIndex > 0}
         initialSelectedAnswer={
           restore && currentQuestion.id === restore.currentQuestion.id

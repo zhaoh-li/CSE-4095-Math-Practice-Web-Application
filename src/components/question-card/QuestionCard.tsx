@@ -10,6 +10,7 @@ import {
 import { Button } from '../ui/Button';
 import { KeyHint } from '../ui/KeyHint';
 import { AnswerChoice } from './AnswerChoice';
+import { ExplanationPanel } from './ExplanationPanel';
 import styles from './QuestionCard.module.css';
 
 export interface QuestionCardProps {
@@ -27,6 +28,8 @@ export interface QuestionCardProps {
   /** Restores a card that was in progress (e.g. after a page refresh). */
   initialSelectedAnswer?: number | null;
   initialFlipped?: boolean;
+  /** Adds a "How to solve it" button to the back of the card. */
+  showExplanation?: boolean;
   /** Told whenever the picked answer or flipped side changes, so it can be saved. */
   onStateChange?: (state: CardState) => void;
 }
@@ -50,6 +53,7 @@ export function QuestionCard({
   shortcutsEnabled = true,
   initialSelectedAnswer = null,
   initialFlipped = false,
+  showExplanation = true,
   onStateChange,
 }: QuestionCardProps) {
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(() =>
@@ -216,6 +220,7 @@ export function QuestionCard({
             You picked:{' '}
             <strong>{selectedAnswer === null ? '—' : formatNumber(selectedAnswer)}</strong>
           </p>
+          {showExplanation && <ExplanationPanel facts={question} />}
           <p className={styles.ask}>Did you get it right?</p>
           <div className={styles.resultButtons}>
             <Button

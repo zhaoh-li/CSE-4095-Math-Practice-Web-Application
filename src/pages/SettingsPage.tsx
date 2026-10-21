@@ -119,13 +119,13 @@ export function SettingsPage() {
           />
           <ToggleSwitch
             label="Sound effects"
-            description="Play sounds for right and wrong answers. Sounds are coming in a future update."
+            description="Play a happy chime when you get an answer right."
             checked={settings.soundEffectsEnabled}
             onChange={(soundEffectsEnabled) => change({ soundEffectsEnabled })}
           />
           <ToggleSwitch
             label="Show explanations"
-            description="Explain the answer on the back of each card. Coming in a future update."
+            description="Add a “How to solve it” button to the back of each card, with pictures or steps."
             checked={settings.showExplanations}
             onChange={(showExplanations) => change({ showExplanations })}
           />
