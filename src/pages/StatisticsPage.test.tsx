@@ -1,7 +1,6 @@
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { MemoryRouter } from 'react-router';
-import { AppRoutes } from '../AppRoutes';
+import { TestApp } from '../test/TestApp';
 import { DEFAULT_SETTINGS } from '../config/defaultSettings';
 import { appData } from '../services/appData';
 import type { PracticeAttempt, PracticeSession } from '../types';
@@ -64,11 +63,7 @@ function seedHistory() {
 
 function renderStats() {
   const user = userEvent.setup();
-  render(
-    <MemoryRouter initialEntries={['/statistics']}>
-      <AppRoutes />
-    </MemoryRouter>,
-  );
+  render(<TestApp initialEntries={['/statistics']} />);
   return user;
 }
 
@@ -125,7 +120,7 @@ describe('StatisticsPage', () => {
   it('lists recent sessions newest first', () => {
     seedHistory();
     renderStats();
-    const table = within(screen.getByRole('region', { name: 'Recent sessions' }));
+    const table = within(screen.getByRole('region', { name: 'Recent sessions table' }));
     const rows = table.getAllByRole('row').slice(1); // skip the header row
     expect(rows).toHaveLength(2);
     expect(rows[0]).toHaveTextContent('Oct 20');

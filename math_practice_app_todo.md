@@ -567,6 +567,7 @@ Initial routes:
 - [x] Support Enter and Space on buttons.
 - [x] Support number keys 1–4 for answer selection.
 - [x] Prevent keyboard shortcuts from interfering with form inputs.
+- [x] Add a "Skip to main content" link for keyboard and screen-reader users.
 
 ### 67. Improve Screen-Reader Support
 - [x] Use semantic HTML.
@@ -592,143 +593,143 @@ Initial routes:
 ## Phase 17: Responsive Design and Polish
 
 ### 70. Optimize for Tablets
-- [ ] Use large touch targets.
-- [ ] Center the practice card.
-- [ ] Keep answer choices easy to reach.
-- [ ] Test portrait and landscape orientations.
+- [x] Use large touch targets.
+- [x] Center the practice card.
+- [x] Keep answer choices easy to reach.
+- [ ] Test portrait and landscape orientations. (Needs a real tablet or browser device mode. Landscape layout added for short screens.)
 
 ### 71. Optimize for Mobile Devices
-- [ ] Stack answer choices when necessary.
-- [ ] Adjust card width.
-- [ ] Prevent horizontal scrolling.
-- [ ] Simplify navigation.
-- [ ] Test on common small-screen sizes.
+- [x] Stack answer choices when necessary.
+- [x] Adjust card width.
+- [x] Prevent horizontal scrolling.
+- [x] Simplify navigation.
+- [ ] Test on common small-screen sizes. (Needs a phone or browser device mode. Layouts reviewed down to 320px wide.)
 
 ### 72. Optimize the Statistics Layout
-- [ ] Convert wide tables to cards on small screens.
-- [ ] Prevent labels and values from overlapping.
-- [ ] Keep recent sessions readable.
-- [ ] Support horizontal scrolling only when necessary.
+- [x] Convert wide tables to cards on small screens.
+- [x] Prevent labels and values from overlapping.
+- [x] Keep recent sessions readable.
+- [x] Support horizontal scrolling only when necessary.
 
 ### 73. Add Child-Friendly Feedback
-- [ ] Add positive feedback messages.
-- [ ] Add supportive messages after mistakes.
-- [ ] Avoid shaming language.
-- [ ] Randomize feedback without becoming distracting.
-- [ ] Add an option to disable feedback effects.
+- [x] Add positive feedback messages.
+- [x] Add supportive messages after mistakes.
+- [x] Avoid shaming language.
+- [x] Randomize feedback without becoming distracting.
+- [x] Add an option to disable feedback effects.
 
 ## Phase 18: Session Recovery and Navigation Safety
 
 ### 74. Persist an Active Session
-- [ ] Save the active session.
-- [ ] Save the current question.
-- [ ] Save the selected answer when appropriate.
-- [ ] Restore the session after a page refresh.
-- [ ] Clear restored state when the session ends.
+- [x] Save the active session.
+- [x] Save the current question.
+- [x] Save the selected answer when appropriate.
+- [x] Restore the session after a page refresh.
+- [x] Clear restored state when the session ends.
 
 ### 75. Protect Against Accidental Navigation
-- [ ] Detect attempts to leave an active session.
-- [ ] Display a confirmation prompt.
-- [ ] Allow the user to continue the session.
-- [ ] Allow the user to end and leave the session.
-- [ ] Avoid showing warnings after session completion.
+- [x] Detect attempts to leave an active session.
+- [x] Display a confirmation prompt.
+- [x] Allow the user to continue the session.
+- [x] Allow the user to end and leave the session.
+- [x] Avoid showing warnings after session completion.
 
 ## Phase 19: Error Handling
 
 ### 76. Handle Invalid Stored Data
-- [ ] Detect invalid settings.
-- [ ] Detect invalid attempts.
-- [ ] Detect invalid sessions.
-- [ ] Detect invalid mistake patterns.
-- [ ] Reset only the affected data category.
-- [ ] Avoid crashing the application.
+- [x] Detect invalid settings.
+- [x] Detect invalid attempts.
+- [x] Detect invalid sessions.
+- [x] Detect invalid mistake patterns.
+- [x] Reset only the affected data category.
+- [x] Avoid crashing the application.
 
 ### 77. Handle Question-Generation Failures
-- [ ] Validate every generated question.
-- [ ] Retry generation after an invalid result.
-- [ ] Set a maximum retry count.
-- [ ] Provide a fallback question.
-- [ ] Log useful development errors.
+- [x] Validate every generated question.
+- [x] Retry generation after an invalid result.
+- [x] Set a maximum retry count.
+- [x] Provide a fallback question.
+- [x] Log useful development errors.
 
 ### 78. Add User-Friendly Error Messages
-- [ ] Add a general error component.
-- [ ] Explain storage errors in simple language.
-- [ ] Explain missing-session errors.
-- [ ] Provide a safe way to return home.
-- [ ] Avoid exposing technical stack traces.
+- [x] Add a general error component.
+- [x] Explain storage errors in simple language.
+- [x] Explain missing-session errors.
+- [x] Provide a safe way to return home.
+- [x] Avoid exposing technical stack traces.
 
 ## Phase 20: Testing
 
 ### 79. Complete Unit Tests
-- [ ] Test all arithmetic generators.
-- [ ] Test difficulty boundaries.
-- [ ] Test distractor generation.
-- [ ] Test answer-choice uniqueness.
-- [ ] Test statistics calculations.
-- [ ] Test mistake-pattern updates.
-- [ ] Test similar-question generation.
-- [ ] Test mastery rules.
-- [ ] Test storage serialization and validation.
+- [x] Test all arithmetic generators.
+- [x] Test difficulty boundaries.
+- [x] Test distractor generation.
+- [x] Test answer-choice uniqueness.
+- [x] Test statistics calculations.
+- [x] Test mistake-pattern updates.
+- [x] Test similar-question generation.
+- [x] Test mastery rules.
+- [x] Test storage serialization and validation.
 
 ### 80. Complete Component Tests
-- [ ] Test operation selection.
-- [ ] Test difficulty selection.
-- [ ] Test answer selection.
-- [ ] Test card flipping.
-- [ ] Test right and wrong buttons.
-- [ ] Test progress updates.
-- [ ] Test session completion.
-- [ ] Test statistics display.
-- [ ] Test confirmation dialogs.
+- [x] Test operation selection.
+- [x] Test difficulty selection.
+- [x] Test answer selection.
+- [x] Test card flipping.
+- [x] Test right and wrong buttons.
+- [x] Test progress updates.
+- [x] Test session completion.
+- [x] Test statistics display.
+- [x] Test confirmation dialogs.
 
 ### 81. Complete Integration Tests
-- [ ] Test a full addition session.
-- [ ] Test a mixed-operation session.
-- [ ] Test continuous practice.
-- [ ] Test an incorrect answer creating a mistake pattern.
-- [ ] Test mistake-review generation.
-- [ ] Test mastery completion.
-- [ ] Test persistence after a browser refresh.
-- [ ] Test resetting statistics.
+- [x] Test a full addition session.
+- [x] Test a mixed-operation session.
+- [x] Test continuous practice.
+- [x] Test an incorrect answer creating a mistake pattern.
+- [x] Test mistake-review generation.
+- [x] Test mastery completion.
+- [x] Test persistence after a browser refresh.
+- [x] Test resetting statistics.
 
 ### 82. Complete Accessibility Testing
-- [ ] Complete a session using only the keyboard.
-- [ ] Test with a screen reader.
-- [ ] Test reduced-motion mode.
-- [ ] Test browser zoom.
-- [ ] Run an automated accessibility checker.
-- [ ] Manually review reported issues.
+- [x] Complete a session using only the keyboard.
+- [ ] Test with a screen reader. (Needs NVDA, VoiceOver, or TalkBack. Announcements are covered by automated tests.)
+- [ ] Test reduced-motion mode. (Needs the OS "reduce motion" setting in a real browser. The in-app Animations switch is tested.)
+- [ ] Test browser zoom. (Needs a real browser at 200%.)
+- [x] Run an automated accessibility checker. (axe-core runs on every page in the test suite.)
+- [x] Manually review reported issues. (axe found duplicate "Recent sessions" landmarks; fixed.)
 
 ## Phase 21: Performance and Data Management
 
 ### 83. Optimize React Rendering
-- [ ] Identify unnecessary component re-renders.
-- [ ] Memoize expensive statistics calculations.
-- [ ] Keep question generation outside render logic.
-- [ ] Avoid unnecessary global state updates.
+- [x] Identify unnecessary component re-renders. (Reviewed in code: settings and statistics are memoized, and questions are generated in event handlers. Not profiled in a real browser.)
+- [x] Memoize expensive statistics calculations.
+- [x] Keep question generation outside render logic.
+- [x] Avoid unnecessary global state updates.
 
 ### 84. Manage Large Practice Histories
-- [ ] Test with several thousand attempts.
-- [ ] Measure local-storage usage.
-- [ ] Limit the number of detailed recent sessions.
-- [ ] Summarize older attempt records if necessary.
-- [ ] Preserve aggregate statistics when archiving details.
+- [x] Test with several thousand attempts.
+- [x] Measure local-storage usage.
+- [x] Limit the number of detailed recent sessions.
+- [x] Summarize older attempt records if necessary. (Beyond 2,000 answers, the oldest 500 become totals.)
+- [x] Preserve aggregate statistics when archiving details.
 
 ### 85. Improve Loading Performance
-- [ ] Measure the initial bundle size.
-- [ ] Lazy-load statistics and settings pages.
-- [ ] Remove unused dependencies.
-- [ ] Optimize fonts and images.
-- [ ] Test on slower devices.
+- [x] Measure the initial bundle size.
+- [x] Lazy-load statistics and settings pages.
+- [x] Remove unused dependencies.
+- [x] Optimize fonts and images.
+- [ ] Test on slower devices. (Needs a real older device, or Chrome DevTools CPU throttling.)
 
 ## Phase 22: Release Preparation
 
 ### 86. Complete Privacy Review
-- [ ] Confirm that no personal information is collected.
-- [ ] Confirm that practice data remains in the browser.
-- [ ] Remove unnecessary tracking services.
-- [ ] Avoid child-facing advertisements.
-- [ ] Explain that clearing browser data removes progress.
+- [x] Confirm that no personal information is collected.
+- [x] Confirm that practice data remains in the browser.
+- [x] Remove unnecessary tracking services.
+- [x] Avoid child-facing advertisements.
+- [x] Explain that clearing browser data removes progress.
 
 ### 87. Complete Browser Testing
 - [ ] Test in Chrome.
@@ -739,20 +740,20 @@ Initial routes:
 - [ ] Test on a mobile device or emulator.
 
 ### 88. Prepare the Production Build
-- [ ] Run all tests.
-- [ ] Resolve linting errors.
-- [ ] Resolve TypeScript errors.
-- [ ] Create the production build.
-- [ ] Test the production build locally.
-- [ ] Configure deployment routing for React Router.
+- [x] Run all tests.
+- [x] Resolve linting errors.
+- [x] Resolve TypeScript errors.
+- [x] Create the production build.
+- [x] Test the production build locally.
+- [x] Configure deployment routing for React Router.
 
 ### 89. Deploy the Application
-- [ ] Select a hosting service.
-- [ ] Deploy the production build.
-- [ ] Verify every route.
-- [ ] Verify local-storage persistence.
-- [ ] Verify responsive behavior.
-- [ ] Verify that no development errors appear in the console.
+- [x] Select a hosting service. (Netlify.)
+- [x] Deploy the production build. (Netlify deploys main automatically when this milestone is merged.)
+- [ ] Verify every route. (Checked locally with the production preview; check again on the live site after merging.)
+- [ ] Verify local-storage persistence. (Check on the live site after merging.)
+- [ ] Verify responsive behavior. (Check on the live site after merging.)
+- [ ] Verify that no development errors appear in the console. (Check on the live site after merging.)
 
 ---
 

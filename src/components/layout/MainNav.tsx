@@ -2,10 +2,10 @@ import { NavLink } from 'react-router';
 import styles from './MainNav.module.css';
 
 const NAV_ITEMS = [
-  { to: '/', label: 'Home', end: true },
-  { to: '/practice/setup', label: 'Practice', end: false },
-  { to: '/statistics', label: 'Statistics', end: false },
-  { to: '/settings', label: 'Settings', end: false },
+  { to: '/', label: 'Home', icon: '🏠', end: true },
+  { to: '/practice/setup', label: 'Practice', icon: '✏️', end: false },
+  { to: '/statistics', label: 'Statistics', icon: '📊', end: false },
+  { to: '/settings', label: 'Settings', icon: '⚙️', end: false },
 ];
 
 export function MainNav() {
@@ -21,7 +21,10 @@ export function MainNav() {
                 isActive ? `${styles.link} ${styles.active}` : styles.link
               }
             >
-              {item.label}
+              <span className={styles.icon} aria-hidden="true">
+                {item.icon}
+              </span>
+              <span>{item.label}</span>
             </NavLink>
           </li>
         ))}

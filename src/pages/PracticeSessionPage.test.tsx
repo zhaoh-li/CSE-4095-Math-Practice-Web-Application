@@ -1,7 +1,6 @@
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { MemoryRouter } from 'react-router';
-import { AppRoutes } from '../AppRoutes';
+import { TestApp } from '../test/TestApp';
 import type { PracticeConfig, SelfReportedResult } from '../types';
 
 const baseConfig: PracticeConfig = {
@@ -14,13 +13,11 @@ const baseConfig: PracticeConfig = {
 function renderSession(config: Partial<PracticeConfig> = {}) {
   const user = userEvent.setup();
   render(
-    <MemoryRouter
+    <TestApp
       initialEntries={[
         { pathname: '/practice/session', state: { config: { ...baseConfig, ...config } } },
       ]}
-    >
-      <AppRoutes />
-    </MemoryRouter>,
+    />,
   );
   return user;
 }
@@ -42,11 +39,7 @@ const currentProblem = () => screen.getByRole('heading', { level: 2, name: /^Wha
 
 describe('PracticeSessionPage', () => {
   it('redirects to setup with a friendly message when there is no setup', () => {
-    render(
-      <MemoryRouter initialEntries={['/practice/session']}>
-        <AppRoutes />
-      </MemoryRouter>,
-    );
+    render(<TestApp initialEntries={['/practice/session']} />);
     expect(
       screen.getByRole('heading', { level: 1, name: 'Set Up Your Practice' }),
     ).toBeInTheDocument();

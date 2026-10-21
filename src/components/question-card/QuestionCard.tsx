@@ -24,6 +24,16 @@ export interface QuestionCardProps {
    * R / W report right or wrong. Also shows the key hints.
    */
   shortcutsEnabled?: boolean;
+  /** Restores a card that was in progress (e.g. after a page refresh). */
+  initialSelectedAnswer?: number | null;
+  initialFlipped?: boolean;
+  /** Told whenever the picked answer or flipped side changes, so it can be saved. */
+  onStateChange?: (state: CardState) => void;
+}
+
+export interface CardState {
+  selectedAnswer: number | null;
+  isCardFlipped: boolean;
 }
 
 /**
@@ -38,15 +48,34 @@ export function QuestionCard({
   animationsEnabled = true,
   autoFocus = false,
   shortcutsEnabled = true,
+  initialSelectedAnswer = null,
+  initialFlipped = false,
+  onStateChange,
 }: QuestionCardProps) {
-  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
-  const [isCardFlipped, setIsCardFlipped] = useState(false);
+  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(() =>
+    initialSelectedAnswer !== null && question.choices.includes(initialSelectedAnswer)
+      ? initialSelectedAnswer
+      : null,
+  );
+  // Only flip if there's a picked answer to show on the back
+  const [isCardFlipped, setIsCardFlipped] = useState(
+    () => initialFlipped && selectedAnswer !== null,
+  );
   const [reportedResult, setReportedResult] = useState<SelfReportedResult | null>(null);
   // Read aloud by screen readers when it changes
   const [announcement, setAnnouncement] = useState('');
 
   const frontHeadingRef = useRef<HTMLHeadingElement>(null);
   const backHeadingRef = useRef<HTMLHeadingElement>(null);
+
+  // Report changes using the latest callback, without re-running for new callbacks
+  const onStateChangeRef = useRef(onStateChange);
+  useEffect(() => {
+    onStateChangeRef.current = onStateChange;
+  });
+  useEffect(() => {
+    onStateChangeRef.current?.({ selectedAnswer, isCardFlipped });
+  }, [selectedAnswer, isCardFlipped]);
 
   useEffect(() => {
     if (autoFocus) frontHeadingRef.current?.focus({ preventScroll: true });

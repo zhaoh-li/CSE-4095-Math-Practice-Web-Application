@@ -3,6 +3,22 @@
 A flash-card style math practice app for kids, built with React, TypeScript, and Vite.
 The build plan lives in [math_practice_app_todo.md](math_practice_app_todo.md).
 
+## Features
+
+- Flash cards for addition, subtraction, multiplication, and division at 4 levels
+- Multiple-choice answers built from common mistakes, then a self-check on the back of the card
+- Sessions of 5, 10, or 20 questions, or "keep going", with a summary at the end
+- Statistics overall, by operation, by level, and for recent sessions
+- Mistake tracking: missed facts come back as similar questions until mastered
+- Accessibility: keyboard shortcuts (1–4, F, R, W, ?), screen-reader announcements,
+  color vision themes (red-green, blue-yellow, high contrast), reduced motion
+- Unfinished sessions survive a refresh; leaving mid-session asks first
+
+## Privacy
+
+No accounts, no tracking, no ads, and no network requests. All progress is stored in the
+browser's localStorage and stays on the device. See the in-app Privacy page.
+
 ## Requirements
 
 - Node.js 24 (installed with nvm)

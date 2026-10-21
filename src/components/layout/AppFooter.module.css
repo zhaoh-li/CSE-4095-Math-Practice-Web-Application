@@ -1,0 +1,17 @@
+.footer {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: var(--space-4) var(--space-4) var(--space-8);
+  text-align: center;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+.footer p {
+  margin: 0;
+}
+
+.footer a {
+  color: var(--color-heading);
+  font-weight: 700;
+}

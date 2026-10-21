@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { OPERATION_INFO } from '../../config/practiceOptions';
 import type { MistakePattern, MistakeStatistics, PracticeAttempt } from '../../types';
 import { useSettings } from '../../context/SettingsContext';
+import type { AttemptArchive } from '../../utils/attemptArchive';
 import { formatSessionDate } from '../../utils/formatDate';
 import { createReviewConfig } from '../../utils/mistakes/mistakePatterns';
 import { formatNumber, formatQuestionText } from '../../utils/questions/buildQuestion';
@@ -13,6 +14,8 @@ import tileStyles from './StatTiles.module.css';
 interface MistakeSectionProps {
   patterns: readonly MistakePattern[];
   attempts: readonly PracticeAttempt[];
+  /** Totals for older answers whose details were archived. */
+  archive?: AttemptArchive;
   stats: MistakeStatistics;
   masteryThreshold: number;
 }
@@ -25,6 +28,7 @@ const times = (n: number) => `${n} ${n === 1 ? 'time' : 'times'}`;
 export function MistakeSection({
   patterns,
   attempts,
+  archive,
   stats,
   masteryThreshold,
 }: MistakeSectionProps) {
@@ -45,7 +49,7 @@ export function MistakeSection({
     );
   }
 
-  const mostMissed = mostMissedOperations(attempts);
+  const mostMissed = mostMissedOperations(attempts, archive);
   const topFacts = sortByMostMissed(patterns).slice(0, 5);
   const shown = sortByMostMissed(patterns.filter((p) => p.isMastered === (view === 'mastered')));
 

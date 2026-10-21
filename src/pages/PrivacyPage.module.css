@@ -1,0 +1,31 @@
+.privacy {
+  max-width: 44rem;
+  margin: 0 auto;
+}
+
+.privacy section {
+  margin-bottom: var(--space-6);
+  padding: var(--space-4) var(--space-6);
+  border: 2px solid var(--color-border-soft);
+  border-radius: var(--radius);
+  background-color: var(--color-surface-translucent);
+}
+
+.privacy h2 {
+  font-size: var(--font-size-lg);
+}
+
+.privacy section p:last-child {
+  margin-bottom: 0;
+}
+
+.lead {
+  font-size: var(--font-size-lg);
+  color: var(--color-text-muted);
+}
+
+@media (max-width: 480px) {
+  .privacy section {
+    padding: var(--space-4);
+  }
+}

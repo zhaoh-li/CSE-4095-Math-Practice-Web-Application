@@ -13,6 +13,12 @@ import { appData } from '../services/appData';
 import type { AppSettings, MathOperation } from '../types';
 import styles from './SettingsPage.module.css';
 
+function formatBytes(bytes: number): string {
+  if (bytes < 1024) return `${bytes} bytes`;
+  if (bytes < 1024 * 1024) return `${Math.round(bytes / 1024)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+}
+
 export const DATA_CLEARED_NOTICE = 'All app data was cleared. Everything is back to the start.';
 
 export function SettingsPage() {
@@ -21,6 +27,7 @@ export function SettingsPage() {
   const [operations, setOperations] = useState<MathOperation[]>(settings.defaultOperations);
   const [savedMessage, setSavedMessage] = useState('');
   const [isConfirmingClear, setIsConfirmingClear] = useState(false);
+  const [storageUsage] = useState(() => appData.storageUsageBytes());
 
   function change(changes: Partial<AppSettings>) {
     updateSettings(changes);
@@ -105,6 +112,12 @@ export function SettingsPage() {
             onChange={(keyboardShortcutsEnabled) => change({ keyboardShortcutsEnabled })}
           />
           <ToggleSwitch
+            label="Encouraging messages"
+            description="Show a short cheer like “Great job!” or “Nice try!” after each answer."
+            checked={settings.feedbackEffectsEnabled}
+            onChange={(feedbackEffectsEnabled) => change({ feedbackEffectsEnabled })}
+          />
+          <ToggleSwitch
             label="Sound effects"
             description="Play sounds for right and wrong answers. Sounds are coming in a future update."
             checked={settings.soundEffectsEnabled}
@@ -124,6 +137,9 @@ export function SettingsPage() {
         <p className={styles.help}>
           Your progress is saved only in this browser. Clearing it removes all answers, sessions,
           mistakes, and settings.
+        </p>
+        <p className={styles.help}>
+          Saved data uses about <strong>{formatBytes(storageUsage)}</strong> in this browser.
         </p>
         <Button variant="danger" onClick={() => setIsConfirmingClear(true)}>
           Clear All Application Data

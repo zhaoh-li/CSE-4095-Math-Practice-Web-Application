@@ -1,7 +1,6 @@
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { MemoryRouter } from 'react-router';
-import { AppRoutes } from '../AppRoutes';
+import { TestApp } from '../test/TestApp';
 import { DEFAULT_SETTINGS } from '../config/defaultSettings';
 import { appData } from '../services/appData';
 import type { MistakePattern, PracticeConfig, SelfReportedResult } from '../types';
@@ -10,11 +9,7 @@ type User = ReturnType<typeof userEvent.setup>;
 
 function renderAt(path: string, state?: unknown) {
   const user = userEvent.setup();
-  render(
-    <MemoryRouter initialEntries={[{ pathname: path, state }]}>
-      <AppRoutes />
-    </MemoryRouter>,
-  );
+  render(<TestApp initialEntries={[{ pathname: path, state }]} />);
   return user;
 }
 

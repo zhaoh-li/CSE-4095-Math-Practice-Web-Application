@@ -17,6 +17,7 @@ function loadHistory() {
     attempts: appData.loadAttempts(),
     sessions: appData.loadSessions(),
     patterns: appData.loadMistakePatterns(),
+    archive: appData.loadAttemptArchive(),
   };
 }
 
@@ -27,7 +28,10 @@ export function StatisticsPage() {
   const [resetMessage, setResetMessage] = useState('');
 
   const stats = useMemo(
-    () => calculateAppStatistics(history.attempts, history.sessions, history.patterns),
+    () =>
+      calculateAppStatistics(history.attempts, history.sessions, history.patterns, {
+        archive: history.archive,
+      }),
     [history],
   );
 
@@ -104,6 +108,7 @@ export function StatisticsPage() {
             <MistakeSection
               patterns={history.patterns}
               attempts={history.attempts}
+              archive={history.archive}
               stats={stats.mistakes}
               masteryThreshold={settings.masteryThreshold}
             />

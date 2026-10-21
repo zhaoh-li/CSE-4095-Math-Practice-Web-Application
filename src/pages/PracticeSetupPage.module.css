@@ -58,3 +58,23 @@
   background-color: var(--color-selected-bg);
   font-weight: 700;
 }
+
+.resume {
+  margin-bottom: var(--space-6);
+  padding: var(--space-4) var(--space-6);
+  border: 3px solid var(--color-primary-border);
+  border-radius: var(--radius);
+  background-color: var(--color-selected-bg);
+  box-shadow: var(--shadow);
+}
+
+.resumeTitle {
+  font-size: var(--font-size-lg);
+  color: var(--color-text);
+}
+
+.resumeActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}

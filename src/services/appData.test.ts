@@ -331,3 +331,103 @@ describe('mistake patterns', () => {
     expect(data.loadMistakePatterns()).toEqual([]);
   });
 });
+
+describe('repairStorage', () => {
+  it('reports nothing when all data is fine', () => {
+    const { data } = setup();
+    data.saveSettings(DEFAULT_SETTINGS);
+    expect(data.repairStorage()).toEqual([]);
+  });
+
+  it('fixes only the damaged kinds of data and leaves the rest alone', () => {
+    const { backend, data } = setup();
+    data.saveAttempt(makeAttempt('good'));
+    backend.setItem(`${STORAGE_PREFIX}settings`, '{broken json');
+    backend.setItem(
+      `${STORAGE_PREFIX}sessions`,
+      JSON.stringify([makeSession('ok', '2026-10-20T10:00:00.000Z'), { id: 'bad' }]),
+    );
+
+    expect(data.repairStorage().sort()).toEqual(['sessions', 'settings']);
+    // Damaged settings reset to defaults; the bad session record is gone
+    expect(data.loadSettings()).toEqual(DEFAULT_SETTINGS);
+    expect(data.loadSessions().map((s) => s.id)).toEqual(['ok']);
+    // Answers were untouched
+    expect(data.loadAttempts().map((a) => a.id)).toEqual(['good']);
+    // Running it again finds nothing left to fix
+    expect(data.repairStorage()).toEqual([]);
+  });
+
+  it('removes a damaged unfinished session', () => {
+    const { backend, data } = setup();
+    backend.setItem(`${STORAGE_PREFIX}activeSession`, JSON.stringify({ routeKey: 'x' }));
+    expect(data.repairStorage()).toEqual(['activeSession']);
+    expect(backend.getItem(`${STORAGE_PREFIX}activeSession`)).toBeNull();
+  });
+
+  it('never crashes, even when storage itself is blocked', () => {
+    const blocked = createAppData(createStorageService(null));
+    expect(() => blocked.repairStorage()).not.toThrow();
+  });
+});
+
+describe('unfinished session snapshot', () => {
+  const question = {
+    id: 'q1',
+    operation: 'addition' as const,
+    difficulty: 'beginner' as const,
+    firstOperand: 2,
+    secondOperand: 3,
+    correctAnswer: 5,
+    displayText: '2 + 3',
+    choices: [4, 5, 6, 7],
+    source: 'regular' as const,
+  };
+  const snapshot = () => ({
+    routeKey: 'k1',
+    config: {
+      mode: 'regular' as const,
+      operations: ['addition' as const],
+      difficulty: 'beginner' as const,
+      sessionLength: 5 as const,
+    },
+    session: makeSession('s1', '2026-10-20T10:00:00.000Z', {
+      isActive: true,
+      completedAt: undefined,
+    }),
+    currentQuestion: question,
+    selectedAnswer: 6,
+    isCardFlipped: true,
+    savedAt: '2026-10-20T10:01:00.000Z',
+  });
+
+  it('saves and loads the snapshot', () => {
+    const { data } = setup();
+    data.saveActiveSession(snapshot());
+    expect(data.loadActiveSession()).toEqual(snapshot());
+  });
+
+  it.each([
+    ['a picked answer that is not a choice', { selectedAnswer: 99 }],
+    ['a flipped card with nothing picked', { selectedAnswer: null, isCardFlipped: true }],
+    ['a finished session', { session: makeSession('s1', '2026-10-20T10:00:00.000Z') }],
+    ['a broken question', { currentQuestion: { ...question, correctAnswer: 9 } }],
+  ])('rejects and removes %s', (_name, change) => {
+    const { backend, data } = setup();
+    data.saveActiveSession({ ...snapshot(), ...change } as never);
+    expect(data.loadActiveSession()).toBeNull();
+    expect(backend.getItem(`${STORAGE_PREFIX}activeSession`)).toBeNull();
+  });
+
+  it('abandoning keeps a session with answers in history as ended', () => {
+    const { data } = setup();
+    data.saveActiveSession(snapshot());
+    data.abandonActiveSession('2026-10-20T11:00:00.000Z');
+    expect(data.loadActiveSession()).toBeNull();
+    expect(data.loadSessions()[0]).toMatchObject({
+      id: 's1',
+      isActive: false,
+      completedAt: '2026-10-20T11:00:00.000Z',
+    });
+  });
+});

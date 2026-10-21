@@ -7,10 +7,13 @@ interface RecentSessionsTableProps {
   sessions: RecentSessionSummary[];
 }
 
-/** Recent sessions, newest first. Scrolls sideways on narrow screens. */
+/**
+ * Recent sessions, newest first. A table on wide screens (scrolling sideways
+ * only if it must); on phones each session becomes its own card.
+ */
 export function RecentSessionsTable({ sessions }: RecentSessionsTableProps) {
   return (
-    <div className={styles.scroller} role="region" aria-label="Recent sessions" tabIndex={0}>
+    <div className={styles.scroller} role="region" aria-label="Recent sessions table" tabIndex={0}>
       <table className={styles.table}>
         <thead>
           <tr>
@@ -33,7 +36,7 @@ export function RecentSessionsTable({ sessions }: RecentSessionsTableProps) {
               <th scope="row">
                 <time dateTime={session.completedAt}>{formatSessionDate(session.completedAt)}</time>
               </th>
-              <td>
+              <td data-label="Practiced">
                 <span className={styles.symbols} aria-hidden="true">
                   {session.operations.map((op) => OPERATION_INFO[op].symbol).join(' ')}
                 </span>
@@ -41,15 +44,17 @@ export function RecentSessionsTable({ sessions }: RecentSessionsTableProps) {
                   {session.operations.map((op) => OPERATION_INFO[op].label).join(', ')}
                 </span>
               </td>
-              <td>
+              <td data-label="Level">
                 {session.mode === 'mistake-review'
                   ? 'Mistake review'
                   : DIFFICULTY_INFO[session.difficulty].label}
               </td>
-              <td>{session.totals.attempted}</td>
-              <td>{session.totals.correct}</td>
-              <td>{session.totals.incorrect}</td>
-              <td className={styles.accuracy}>{session.totals.accuracy}%</td>
+              <td data-label="Questions">{session.totals.attempted}</td>
+              <td data-label="✓ Correct">{session.totals.correct}</td>
+              <td data-label="✗ Incorrect">{session.totals.incorrect}</td>
+              <td data-label="Accuracy" className={styles.accuracy}>
+                {session.totals.accuracy}%
+              </td>
             </tr>
           ))}
         </tbody>

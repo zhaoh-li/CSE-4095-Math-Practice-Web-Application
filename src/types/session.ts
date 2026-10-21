@@ -1,4 +1,4 @@
-import type { DifficultyLevel, MathOperation, QuestionSource } from './question';
+import type { DifficultyLevel, MathOperation, Question, QuestionSource } from './question';
 
 /** Number of questions in a session, or no fixed end. */
 export type SessionLength = 5 | 10 | 20 | 'continuous';
@@ -50,4 +50,20 @@ export interface PracticeSession {
   startedAt: string;
   /** ISO 8601 timestamp, set when the session ends. */
   completedAt?: string;
+}
+
+/**
+ * Everything needed to pick up an unfinished session after a refresh or
+ * after closing the tab, exactly where the student left off.
+ */
+export interface ActiveSessionSnapshot {
+  /** Identifies the browser history entry, so a refresh resumes this session. */
+  routeKey: string;
+  config: PracticeConfig;
+  session: PracticeSession;
+  currentQuestion: Question;
+  selectedAnswer: number | null;
+  isCardFlipped: boolean;
+  /** ISO 8601 timestamp. */
+  savedAt: string;
 }

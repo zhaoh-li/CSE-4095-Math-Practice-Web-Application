@@ -1,7 +1,6 @@
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { MemoryRouter } from 'react-router';
-import { AppRoutes } from '../AppRoutes';
+import { TestApp } from '../test/TestApp';
 import { DEFAULT_SETTINGS } from '../config/defaultSettings';
 import { appData } from '../services/appData';
 import type { PracticeConfig } from '../types';
@@ -15,11 +14,7 @@ const config: PracticeConfig = {
 
 function renderAt(path: string, state?: unknown) {
   const user = userEvent.setup();
-  render(
-    <MemoryRouter initialEntries={[{ pathname: path, state }]}>
-      <AppRoutes />
-    </MemoryRouter>,
-  );
+  render(<TestApp initialEntries={[{ pathname: path, state }]} />);
   return user;
 }
 
@@ -65,7 +60,8 @@ describe('keyboard-only practice', () => {
     const user = renderAt('/practice/session', { config });
     await user.keyboard('1fr');
     const live = [...document.querySelectorAll('[aria-live="polite"]')].map((el) => el.textContent);
-    expect(live).toContain('Question 2 of 5.');
+    // An encouraging message comes first, e.g. "Super! Question 2 of 5."
+    expect(live.some((text) => text?.endsWith('Question 2 of 5.'))).toBe(true);
   });
 });
 

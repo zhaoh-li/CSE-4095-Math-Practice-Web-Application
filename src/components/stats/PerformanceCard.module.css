@@ -72,6 +72,11 @@
   margin: 0;
 }
 
+.counts dt,
+.counts dd {
+  overflow-wrap: anywhere;
+}
+
 .counts dt {
   font-size: 0.875rem;
   font-weight: 700;
