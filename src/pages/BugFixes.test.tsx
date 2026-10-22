@@ -157,3 +157,54 @@ describe('bug fix: privacy page does not overpromise offline use', () => {
     expect(screen.getByText(/only used to open the app/i)).toBeInTheDocument();
   });
 });
+
+describe('bug fix: refreshing cannot reroll a question', () => {
+  // A real refresh keeps the same address, saved state, and history key
+  function openSessionLikeTheBrowser() {
+    const router = createMemoryRouter(
+      createAppRoutes({ StatisticsPage, SettingsPage, PrivacyPage }),
+      {
+        initialEntries: [{ pathname: '/practice/session', state: { config }, key: 'same-entry' }],
+      },
+    );
+    const user = userEvent.setup();
+    const view = render(<RouterProvider router={router} />);
+    const question = () => screen.getByRole('heading', { level: 2, name: /^What is/ }).textContent;
+    return { user, view, question };
+  }
+
+  it('question 1 stays the same after refreshing again and again', () => {
+    const first = openSessionLikeTheBrowser();
+    const original = first.question();
+    first.view.unmount();
+
+    for (let refresh = 0; refresh < 5; refresh++) {
+      const again = openSessionLikeTheBrowser();
+      expect(again.question()).toBe(original);
+      expect(screen.getByText('Question 1 of 5')).toBeInTheDocument();
+      again.view.unmount();
+    }
+  });
+
+  it('a picked answer and a flipped card on question 1 survive a refresh too', async () => {
+    const first = openSessionLikeTheBrowser();
+    await first.user.keyboard('3f');
+    const picked = screen.getByText(/you picked:/i).textContent;
+    first.view.unmount();
+
+    openSessionLikeTheBrowser();
+    expect(document.querySelector('[data-flipped="true"]')).toBeInTheDocument();
+    expect(screen.getByText(/you picked:/i).textContent).toBe(picked);
+  });
+
+  it('later questions stay the same after a refresh', async () => {
+    const first = openSessionLikeTheBrowser();
+    await first.user.keyboard('1fr');
+    const second = first.question();
+    first.view.unmount();
+
+    const again = openSessionLikeTheBrowser();
+    expect(screen.getByText('Question 2 of 5')).toBeInTheDocument();
+    expect(again.question()).toBe(second);
+  });
+});

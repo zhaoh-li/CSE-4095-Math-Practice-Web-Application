@@ -89,8 +89,9 @@ function PracticeRunner({ config, routeKey, restore }: PracticeRunnerProps) {
       ? ''
       : [feedback?.message, progressText].filter(Boolean).join(' ');
 
-  // Keep a snapshot of the unfinished session, so a refresh picks up right here.
-  // Only once something has been answered: an untouched session isn't worth resuming.
+  // Keep a snapshot of the unfinished session from the very first question, so a
+  // refresh always brings back the same question (it can't be "rerolled").
+  // The setup page only offers to continue sessions that have answers.
   useEffect(() => {
     if (!session.isActive) {
       appData.clearActiveSession();
@@ -100,8 +101,6 @@ function PracticeRunner({ config, routeKey, restore }: PracticeRunnerProps) {
       // Starting fresh closes an older unfinished session (kept in history as ended)
       const saved = appData.loadActiveSession();
       if (saved && saved.session.id !== session.id) appData.abandonActiveSession();
-      else appData.clearActiveSession();
-      return;
     }
     appData.saveActiveSession({
       routeKey,

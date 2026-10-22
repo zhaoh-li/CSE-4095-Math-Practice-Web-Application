@@ -20,7 +20,15 @@ export function PracticeSetupPage() {
   const notice = useOneTimeNotice();
   const { settings } = useSettings();
   const [patterns] = useState(() => appData.loadMistakePatterns());
-  const [unfinished, setUnfinished] = useState(() => appData.loadActiveSession());
+  // Only offer to continue a session that has answers; an untouched one is discarded
+  const [unfinished, setUnfinished] = useState(() => {
+    const saved = appData.loadActiveSession();
+    if (saved && saved.session.attemptedCount === 0) {
+      appData.clearActiveSession();
+      return null;
+    }
+    return saved;
+  });
   const activeMistakeCount = activePatterns(patterns).length;
 
   // Coming back from a session ("Change Settings") keeps the previous choices;
