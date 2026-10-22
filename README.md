@@ -9,6 +9,7 @@ Vite. The build plan lives in [TODO.md](TODO.md), and the requirements in
 
 ## Getting Started
 
+
 ### How to run (in simple terms)
 
 1. Download the latest release(should be V1.0.0)
@@ -18,8 +19,8 @@ Vite. The build plan lives in [TODO.md](TODO.md), and the requirements in
 3. You need to run the command "npm run dev" to start the local server
 
 4. If you get
-
-        "> math-practice-app@1.0.0 dev
+   
+        "> math-practice-app@0.0.0 dev
 
         > vite
 
