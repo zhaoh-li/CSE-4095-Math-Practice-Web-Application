@@ -13,6 +13,7 @@
 .actions {
   display: flex;
   flex-wrap: wrap;
+  align-items: flex-start;
   justify-content: center;
   gap: var(--space-4);
   max-width: 40rem;
@@ -53,4 +54,36 @@
   margin: var(--space-8) auto 0;
   color: var(--color-text-muted);
   font-size: var(--font-size-sm);
+}
+
+.progress {
+  max-width: 34rem;
+  margin: 0 auto var(--space-8);
+  padding: var(--space-4) var(--space-6);
+  border: 2px solid var(--color-border-soft);
+  border-radius: var(--radius);
+  background-color: var(--color-surface-translucent);
+  box-shadow: var(--shadow);
+}
+
+.progressTitle {
+  margin-bottom: var(--space-2);
+  font-size: var(--font-size-lg);
+}
+
+.progress p {
+  margin: 0;
+}
+
+.reviewEmpty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.note {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
 }

@@ -6,7 +6,7 @@ import type { PracticeConfig, SelfReportedResult } from '../types';
 const baseConfig: PracticeConfig = {
   mode: 'regular',
   operations: ['addition'],
-  difficulty: 'beginner',
+  difficulties: ['beginner'],
   sessionLength: 5,
 };
 
@@ -70,7 +70,7 @@ describe('PracticeSessionPage', () => {
   it('shows a new question and moves focus to it after each answer', async () => {
     const user = renderSession({
       operations: ['multiplication'],
-      difficulty: 'easy',
+      difficulties: ['easy'],
       sessionLength: 10,
     });
     const first = currentProblem().textContent;
@@ -132,13 +132,13 @@ describe('PracticeSessionPage', () => {
   });
 
   it('goes back to setup without asking when ending before any answers', async () => {
-    const user = renderSession({ sessionLength: 'continuous', difficulty: 'advanced' });
+    const user = renderSession({ sessionLength: 'continuous', difficulties: ['advanced'] });
     await user.click(screen.getByRole('button', { name: 'End Session' }));
     expect(
       screen.getByRole('heading', { level: 1, name: 'Set Up Your Practice' }),
     ).toBeInTheDocument();
     // The previous choices are kept
-    expect(screen.getByRole('radio', { name: 'Advanced' })).toBeChecked();
+    expect(screen.getByRole('checkbox', { name: 'Advanced' })).toBeChecked();
   });
 
   it('marks a fixed-length session that ends early', async () => {

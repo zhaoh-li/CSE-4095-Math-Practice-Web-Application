@@ -52,7 +52,7 @@ describe('createPracticeSession', () => {
       {
         mode: 'regular',
         operations: ['addition', 'division'],
-        difficulty: 'easy',
+        difficulties: ['easy'],
         sessionLength: 20,
       },
       NOW,
@@ -60,7 +60,7 @@ describe('createPracticeSession', () => {
     expect(session).toMatchObject({
       mode: 'regular',
       operations: ['addition', 'division'],
-      difficulty: 'easy',
+      difficulties: ['easy'],
       sessionLength: 20,
       currentQuestionIndex: 0,
       attemptedCount: 0,
@@ -201,7 +201,7 @@ describe('configFromSession', () => {
     const config: PracticeConfig = {
       mode: 'regular',
       operations: ['multiplication'],
-      difficulty: 'advanced',
+      difficulties: ['advanced'],
       sessionLength: 'continuous',
     };
     expect(configFromSession(createPracticeSession(config))).toEqual(config);
@@ -225,7 +225,7 @@ describe('isCompletedSession', () => {
     ['totals that do not add up', () => ({ ...finished(), correctCount: 99 })],
     ['a negative count', () => ({ ...finished(), mistakeReviewCount: -1 })],
     ['missing operations', () => ({ ...finished(), operations: undefined })],
-    ['an unknown difficulty', () => ({ ...finished(), difficulty: 'expert' })],
+    ['an unknown difficulty', () => ({ ...finished(), difficulties: ['expert'] })],
   ])('rejects %s', (_name, make) => {
     expect(isCompletedSession(make())).toBe(false);
   });

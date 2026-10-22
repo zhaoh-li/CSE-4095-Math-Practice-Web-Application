@@ -9,7 +9,7 @@ export const DEFAULT_SETTINGS: AppSettings = {
   feedbackEffectsEnabled: true,
   colorVisionMode: 'off',
   defaultSessionLength: 10,
-  defaultDifficulty: 'beginner',
+  defaultDifficulties: ['beginner'],
   defaultOperations: ['addition'],
   masteryThreshold: 3,
 };

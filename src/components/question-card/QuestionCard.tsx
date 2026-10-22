@@ -15,7 +15,8 @@ import styles from './QuestionCard.module.css';
 
 export interface QuestionCardProps {
   question: Question;
-  onResult: (result: SelfReportedResult, selectedAnswer: number) => void;
+  /** selectedAnswer is null when the card was flipped without picking an answer. */
+  onResult: (result: SelfReportedResult, selectedAnswer: number | null) => void;
   /** Turns the flip and slide-in animations on or off. Reduced-motion users never see them. */
   animationsEnabled?: boolean;
   /** Move keyboard focus to the question when the card appears. */
@@ -61,10 +62,7 @@ export function QuestionCard({
       ? initialSelectedAnswer
       : null,
   );
-  // Only flip if there's a picked answer to show on the back
-  const [isCardFlipped, setIsCardFlipped] = useState(
-    () => initialFlipped && selectedAnswer !== null,
-  );
+  const [isCardFlipped, setIsCardFlipped] = useState(initialFlipped);
   const [reportedResult, setReportedResult] = useState<SelfReportedResult | null>(null);
   // Read aloud by screen readers when it changes
   const [announcement, setAnnouncement] = useState('');
@@ -100,14 +98,19 @@ export function QuestionCard({
     if (announce) setAnnouncement(`You picked ${formatNumber(value)}.`);
   }
 
+  // Flipping is allowed even without picking an answer first
   function handleFlip() {
-    if (selectedAnswer === null || isCardFlipped) return;
+    if (isCardFlipped) return;
     setIsCardFlipped(true);
-    setAnnouncement(`You picked ${formatNumber(selectedAnswer)}. Did you get it right?`);
+    setAnnouncement(
+      selectedAnswer === null
+        ? "You didn't pick an answer. Did you get it right?"
+        : `You picked ${formatNumber(selectedAnswer)}. Did you get it right?`,
+    );
   }
 
   function handleResult(result: SelfReportedResult) {
-    if (!isCardFlipped || reportedResult !== null || selectedAnswer === null) return;
+    if (!isCardFlipped || reportedResult !== null) return;
     setReportedResult(result);
     setAnnouncement(result === 'correct' ? 'Marked as right.' : 'Marked as wrong.');
     onResult(result, selectedAnswer);
@@ -180,11 +183,7 @@ export function QuestionCard({
               />
             ))}
           </div>
-          <Button
-            onClick={handleFlip}
-            disabled={selectedAnswer === null}
-            aria-keyshortcuts={shortcutsEnabled ? 'F Enter' : undefined}
-          >
+          <Button onClick={handleFlip} aria-keyshortcuts={shortcutsEnabled ? 'F Enter' : undefined}>
             Flip Card
             {shortcutsEnabled && <KeyHint>F</KeyHint>}
           </Button>
@@ -195,7 +194,9 @@ export function QuestionCard({
               to pick, then <KeyHint decorative={false}>F</KeyHint> to flip.
             </p>
           ) : (
-            selectedAnswer === null && <p className={styles.hint}>Pick an answer, then flip!</p>
+            selectedAnswer === null && (
+              <p className={styles.hint}>Pick an answer, then flip! Or flip to see the answer.</p>
+            )
           )}
         </section>
 
@@ -217,8 +218,13 @@ export function QuestionCard({
             <span className={styles.answer}>{formatNumber(question.correctAnswer)}</span>
           </h2>
           <p className={styles.yourAnswer}>
-            You picked:{' '}
-            <strong>{selectedAnswer === null ? '—' : formatNumber(selectedAnswer)}</strong>
+            {selectedAnswer === null ? (
+              "You didn't pick an answer."
+            ) : (
+              <>
+                You picked: <strong>{formatNumber(selectedAnswer)}</strong>
+              </>
+            )}
           </p>
           {showExplanation && <ExplanationPanel facts={question} />}
           <p className={styles.ask}>Did you get it right?</p>

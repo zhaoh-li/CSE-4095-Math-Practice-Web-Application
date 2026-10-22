@@ -208,12 +208,12 @@ describe('createReviewConfig', () => {
         pattern({ id: 'b', operation: 'addition' }),
         pattern({ id: 'c', operation: 'subtraction', isMastered: true }),
       ],
-      { difficulty: 'easy', sessionLength: 5 },
+      { difficulties: ['easy'], sessionLength: 5 },
     );
     expect(config).toEqual({
       mode: 'mistake-review',
       operations: ['addition', 'division'],
-      difficulty: 'easy',
+      difficulties: ['easy'],
       sessionLength: 5,
     });
   });

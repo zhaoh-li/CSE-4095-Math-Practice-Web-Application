@@ -37,7 +37,7 @@ export function createPracticeSession(
     id: createId(),
     mode: config.mode,
     operations: [...config.operations],
-    difficulty: config.difficulty,
+    difficulties: [...config.difficulties],
     sessionLength: config.sessionLength,
     currentQuestionIndex: 0,
     attemptedCount: 0,
@@ -64,7 +64,8 @@ export function createInitialSessionState(
 export function createAttempt(
   session: PracticeSession,
   question: Question,
-  selectedAnswer: number,
+  /** null when the student flipped the card without picking an answer. */
+  selectedAnswer: number | null,
   result: SelfReportedResult,
   now: string = new Date().toISOString(),
 ): PracticeAttempt {
@@ -77,7 +78,7 @@ export function createAttempt(
     firstOperand: question.firstOperand,
     secondOperand: question.secondOperand,
     correctAnswer: question.correctAnswer,
-    selectedAnswer,
+    ...(selectedAnswer !== null ? { selectedAnswer } : {}),
     result,
     source: question.source,
     ...(question.mistakePatternId ? { mistakePatternId: question.mistakePatternId } : {}),
@@ -143,7 +144,7 @@ export function configFromSession(session: PracticeSession): PracticeConfig {
   return {
     mode: session.mode,
     operations: [...session.operations],
-    difficulty: session.difficulty,
+    difficulties: [...session.difficulties],
     sessionLength: session.sessionLength,
   };
 }

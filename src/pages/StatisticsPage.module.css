@@ -41,17 +41,15 @@
   font-weight: 700;
 }
 
-.warning {
-  padding: var(--space-3) var(--space-4);
-  border: 2px solid var(--color-error);
-  border-radius: var(--radius-sm);
-  background-color: var(--color-error-bg);
-  font-weight: 700;
-}
-
 .reset {
   padding: var(--space-4) var(--space-6);
   border: 2px solid var(--color-border-soft);
   border-radius: var(--radius);
   background-color: var(--color-surface-translucent);
+}
+
+.accuracyNote {
+  margin: calc(var(--space-2) * -1) 0 0;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
 }

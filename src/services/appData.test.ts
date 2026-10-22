@@ -18,7 +18,7 @@ function makeSession(
     id,
     mode: 'regular',
     operations: ['addition'],
-    difficulty: 'beginner',
+    difficulties: ['beginner'],
     sessionLength: 10,
     currentQuestionIndex: 0,
     attemptedCount: 1,
@@ -68,7 +68,7 @@ describe('settings', () => {
     const settings = {
       ...DEFAULT_SETTINGS,
       colorVisionMode: 'red-green' as const,
-      defaultDifficulty: 'advanced' as const,
+      defaultDifficulties: ['advanced' as const],
     };
     expect(data.saveSettings(settings)).toEqual({ ok: true });
     expect(data.loadSettings()).toEqual(settings);
@@ -80,7 +80,7 @@ describe('settings', () => {
       `${STORAGE_PREFIX}settings`,
       JSON.stringify({
         colorVisionMode: 'blue-yellow',
-        defaultDifficulty: 'expert',
+        defaultDifficulties: ['expert'],
         defaultOperations: [],
         defaultSessionLength: 7,
         cardAnimationsEnabled: 'yes',
@@ -388,7 +388,7 @@ describe('unfinished session snapshot', () => {
     config: {
       mode: 'regular' as const,
       operations: ['addition' as const],
-      difficulty: 'beginner' as const,
+      difficulties: ['beginner' as const],
       sessionLength: 5 as const,
     },
     session: makeSession('s1', '2026-10-20T10:00:00.000Z', {
@@ -409,7 +409,6 @@ describe('unfinished session snapshot', () => {
 
   it.each([
     ['a picked answer that is not a choice', { selectedAnswer: 99 }],
-    ['a flipped card with nothing picked', { selectedAnswer: null, isCardFlipped: true }],
     ['a finished session', { session: makeSession('s1', '2026-10-20T10:00:00.000Z') }],
     ['a broken question', { currentQuestion: { ...question, correctAnswer: 9 } }],
   ])('rejects and removes %s', (_name, change) => {
@@ -417,6 +416,12 @@ describe('unfinished session snapshot', () => {
     data.saveActiveSession({ ...snapshot(), ...change } as never);
     expect(data.loadActiveSession()).toBeNull();
     expect(backend.getItem(`${STORAGE_PREFIX}activeSession`)).toBeNull();
+  });
+
+  it('accepts a card flipped without picking an answer', () => {
+    const { data } = setup();
+    data.saveActiveSession({ ...snapshot(), selectedAnswer: null, isCardFlipped: true });
+    expect(data.loadActiveSession()).toMatchObject({ selectedAnswer: null, isCardFlipped: true });
   });
 
   it('abandoning keeps a session with answers in history as ended', () => {
@@ -441,15 +446,15 @@ describe('v1 → v2 migration (sound effects arrive)', () => {
       JSON.stringify({
         ...DEFAULT_SETTINGS,
         soundEffectsEnabled: false,
-        defaultDifficulty: 'easy',
+        defaultDifficulties: ['easy'],
       }),
     );
     const data = createAppData(createStorageService(backend));
     expect(data.loadSettings()).toMatchObject({
       soundEffectsEnabled: true,
-      defaultDifficulty: 'easy',
+      defaultDifficulties: ['easy'],
     });
-    expect(raw(backend, 'schemaVersion')).toBe('2');
+    expect(raw(backend, 'schemaVersion')).toBe(String(CURRENT_SCHEMA_VERSION));
   });
 
   it('respects turning sound off after the upgrade', () => {
@@ -462,5 +467,29 @@ describe('v1 → v2 migration (sound effects arrive)', () => {
     expect(createAppData(createStorageService(backend)).loadSettings().soundEffectsEnabled).toBe(
       false,
     );
+  });
+});
+
+describe('v2 → v3 migration (several levels)', () => {
+  it('turns single saved levels into lists everywhere', () => {
+    const backend = createMemoryStorage();
+    backend.setItem(`${STORAGE_PREFIX}schemaVersion`, '2');
+    const { defaultDifficulties: _ignored, ...oldSettings } = DEFAULT_SETTINGS;
+    void _ignored;
+    backend.setItem(
+      `${STORAGE_PREFIX}settings`,
+      JSON.stringify({ ...oldSettings, defaultDifficulty: 'intermediate' }),
+    );
+    const { difficulties: _d, ...oldSession } = makeSession('s1', '2026-10-20T10:00:00.000Z');
+    void _d;
+    backend.setItem(
+      `${STORAGE_PREFIX}sessions`,
+      JSON.stringify([{ ...oldSession, difficulty: 'easy' }]),
+    );
+
+    const data = createAppData(createStorageService(backend));
+    expect(data.loadSettings().defaultDifficulties).toEqual(['intermediate']);
+    expect(data.loadSessions()[0].difficulties).toEqual(['easy']);
+    expect(raw(backend, 'schemaVersion')).toBe('3');
   });
 });

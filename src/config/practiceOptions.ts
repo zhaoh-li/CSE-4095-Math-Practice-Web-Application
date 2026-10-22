@@ -39,7 +39,7 @@ export const DIFFICULTY_INFO: Record<DifficultyLevel, DifficultyInfo> = {
   advanced: {
     level: 4,
     label: 'Advanced',
-    description: 'Numbers up to 1,000. Bigger times tables.',
+    description: 'Numbers up to 1,000. Times tables up to 20.',
   },
 };
 
@@ -60,6 +60,6 @@ export const SESSION_LENGTH_OPTIONS: SessionLengthOption[] = [
 export const DEFAULT_PRACTICE_CONFIG: PracticeConfig = {
   mode: 'regular',
   operations: [...DEFAULT_SETTINGS.defaultOperations],
-  difficulty: DEFAULT_SETTINGS.defaultDifficulty,
+  difficulties: [...DEFAULT_SETTINGS.defaultDifficulties],
   sessionLength: DEFAULT_SETTINGS.defaultSessionLength,
 };

@@ -89,10 +89,18 @@ function PracticeRunner({ config, routeKey, restore }: PracticeRunnerProps) {
       ? ''
       : [feedback?.message, progressText].filter(Boolean).join(' ');
 
-  // Keep a snapshot of the unfinished session, so a refresh picks up right here
+  // Keep a snapshot of the unfinished session, so a refresh picks up right here.
+  // Only once something has been answered: an untouched session isn't worth resuming.
   useEffect(() => {
     if (!session.isActive) {
       appData.clearActiveSession();
+      return;
+    }
+    if (session.attemptedCount === 0) {
+      // Starting fresh closes an older unfinished session (kept in history as ended)
+      const saved = appData.loadActiveSession();
+      if (saved && saved.session.id !== session.id) appData.abandonActiveSession();
+      else appData.clearActiveSession();
       return;
     }
     appData.saveActiveSession({
@@ -131,7 +139,7 @@ function PracticeRunner({ config, routeKey, restore }: PracticeRunnerProps) {
     blocker.proceed?.();
   }
 
-  function handleResult(result: SelfReportedResult, selectedAnswer: number) {
+  function handleResult(result: SelfReportedResult, selectedAnswer: number | null) {
     recordResult(result, selectedAnswer);
     if (result === 'correct' && settings.soundEffectsEnabled) playCorrectChime();
     if (settings.feedbackEffectsEnabled) {

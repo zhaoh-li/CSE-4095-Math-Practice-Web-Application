@@ -58,7 +58,7 @@ export function usePracticeSession(
   );
 
   const recordResult = useCallback(
-    (result: SelfReportedResult, selectedAnswer: number) => {
+    (result: SelfReportedResult, selectedAnswer: number | null) => {
       const { session, currentQuestion } = state;
       if (!session.isActive) return;
 

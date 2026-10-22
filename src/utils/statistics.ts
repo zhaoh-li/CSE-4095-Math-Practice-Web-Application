@@ -78,7 +78,7 @@ export function summarizeSession(session: PracticeSession): RecentSessionSummary
     mode: session.mode,
     completedAt: session.completedAt ?? session.startedAt,
     operations: [...session.operations],
-    difficulty: session.difficulty,
+    difficulties: [...session.difficulties],
     sessionLength: session.sessionLength,
     totals: totalsFromCounts(session.correctCount, session.incorrectCount),
   };
@@ -86,7 +86,7 @@ export function summarizeSession(session: PracticeSession): RecentSessionSummary
 
 /**
  * All statistics for the Statistics page.
- * Sessions with no answers are left out of the recent list.
+ * Sessions with no answers, or still in progress, are left out of the recent list.
  */
 export function calculateAppStatistics(
   attempts: readonly PracticeAttempt[],
@@ -98,7 +98,8 @@ export function calculateAppStatistics(
   }: { archive?: AttemptArchive; recentLimit?: number } = {},
 ): AppStatistics {
   const recentSessions = sessions
-    .filter((s) => s.attemptedCount > 0)
+    // Unfinished sessions appear once they end; their answers already count above
+    .filter((s) => s.attemptedCount > 0 && !s.isActive)
     .map(summarizeSession)
     .sort((a, b) => b.completedAt.localeCompare(a.completedAt))
     .slice(0, recentLimit);

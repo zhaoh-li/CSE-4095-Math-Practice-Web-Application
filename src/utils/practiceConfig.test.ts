@@ -17,7 +17,7 @@ describe('isPracticeConfig', () => {
     ['a string', 'addition'],
     ['no operations', { ...DEFAULT_PRACTICE_CONFIG, operations: [] }],
     ['an unknown operation', { ...DEFAULT_PRACTICE_CONFIG, operations: ['modulo'] }],
-    ['an unknown difficulty', { ...DEFAULT_PRACTICE_CONFIG, difficulty: 'expert' }],
+    ['an unknown difficulty', { ...DEFAULT_PRACTICE_CONFIG, difficulties: ['expert'] }],
     ['an unsupported length', { ...DEFAULT_PRACTICE_CONFIG, sessionLength: 7 }],
     ['an unknown mode', { ...DEFAULT_PRACTICE_CONFIG, mode: 'race' }],
   ])('rejects %s', (_name, value) => {

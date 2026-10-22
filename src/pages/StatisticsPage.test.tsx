@@ -34,7 +34,7 @@ function session(
     id,
     mode: 'regular',
     operations: ['addition', 'multiplication'],
-    difficulty: 'easy',
+    difficulties: ['easy'],
     sessionLength: 10,
     currentQuestionIndex: 9,
     attemptedCount: 10,
@@ -155,14 +155,14 @@ describe('StatisticsPage', () => {
 
     it('clears history but keeps settings, then refreshes the page', async () => {
       seedHistory();
-      appData.saveSettings({ ...DEFAULT_SETTINGS, defaultDifficulty: 'advanced' });
+      appData.saveSettings({ ...DEFAULT_SETTINGS, defaultDifficulties: ['advanced'] });
       const user = renderStats();
       await user.click(screen.getByRole('button', { name: 'Reset Statistics' }));
       await user.click(screen.getByRole('button', { name: 'Yes, reset everything' }));
 
       expect(appData.loadAttempts()).toEqual([]);
       expect(appData.loadSessions()).toEqual([]);
-      expect(appData.loadSettings().defaultDifficulty).toBe('advanced');
+      expect(appData.loadSettings().defaultDifficulties).toEqual(['advanced']);
       expect(screen.getByRole('status')).toHaveTextContent('Your statistics have been reset.');
       expect(screen.getByRole('heading', { name: 'No practice yet!' })).toBeInTheDocument();
     });

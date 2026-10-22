@@ -52,13 +52,6 @@ export function StatisticsPage() {
         {resetMessage}
       </p>
 
-      {!appData.isPersistent && (
-        <p className={styles.warning}>
-          This browser isn't letting the app save data, so your progress will be lost when you close
-          the page.
-        </p>
-      )}
-
       {!hasHistory ? (
         <div className={styles.empty}>
           <p className={styles.emptyIcon} aria-hidden="true">
@@ -73,6 +66,11 @@ export function StatisticsPage() {
           <section className={styles.section} aria-labelledby="overview-title">
             <h2 id="overview-title">Overview</h2>
             <StatTiles label="Overall results" totals={stats.overall} attemptedLabel="Questions" />
+            <p className={styles.accuracyNote}>
+              <span aria-hidden="true">ℹ️ </span>
+              Correct, incorrect, and accuracy come from what you said after each card (“I Got It
+              Right” or “I Got It Wrong”), not from automatic grading.
+            </p>
           </section>
 
           <section className={styles.section} aria-labelledby="by-operation-title">

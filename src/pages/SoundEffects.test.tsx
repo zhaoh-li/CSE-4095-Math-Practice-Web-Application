@@ -10,7 +10,7 @@ vi.mock('../services/sound', () => ({ playCorrectChime: vi.fn() }));
 const config = {
   mode: 'regular',
   operations: ['addition'],
-  difficulty: 'beginner',
+  difficulties: ['beginner'],
   sessionLength: 5,
 };
 

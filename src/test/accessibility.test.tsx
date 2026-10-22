@@ -39,7 +39,7 @@ function seedHistory() {
     id: 's1',
     mode: 'regular',
     operations: ['multiplication'],
-    difficulty: 'easy',
+    difficulties: ['easy'],
     sessionLength: 5,
     currentQuestionIndex: 0,
     attemptedCount: 1,
@@ -72,7 +72,7 @@ function seedHistory() {
 const config = {
   mode: 'regular',
   operations: ['addition'],
-  difficulty: 'beginner',
+  difficulties: ['beginner'],
   sessionLength: 5,
 };
 

@@ -15,7 +15,7 @@ export interface AppSettings {
   /** Swaps the whole color theme for one suited to a type of color vision. */
   colorVisionMode: ColorVisionMode;
   defaultSessionLength: SessionLength;
-  defaultDifficulty: DifficultyLevel;
+  defaultDifficulties: DifficultyLevel[];
   defaultOperations: MathOperation[];
   /** Correct similar answers needed to master a mistake. Default is 3. */
   masteryThreshold: number;

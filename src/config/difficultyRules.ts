@@ -43,16 +43,19 @@ export interface DifficultyRules {
 /**
  * Number ranges for each difficulty level.
  *
- * Level 1 Beginner:     + and − within 10,    times tables 0–5
+ * Level 1 Beginner:     + and − within 10,    times tables 0–5 × 0–5
  * Level 2 Easy:         + and − within 20,    times tables 0–10
  * Level 3 Intermediate: + and − within 100,   times tables 2–12
- * Level 4 Advanced:     + and − within 1,000, two-digit × one-digit
+ * Level 4 Advanced:     + and − within 1,000, one-digit × 11–20
+ *
+ * Every range stays inside the limits in SPECIFICATION.md section 5
+ * (checked by difficultyRules.test.ts).
  */
 export const DIFFICULTY_RULES: Record<DifficultyLevel, DifficultyRules> = {
   beginner: {
     addition: { operand: { min: 0, max: 10 }, maxResult: 10 },
     subtraction: { minuend: { min: 0, max: 10 }, subtrahend: { min: 0, max: 10 } },
-    multiplication: { tableFactor: { min: 0, max: 5 }, otherFactor: { min: 0, max: 10 } },
+    multiplication: { tableFactor: { min: 0, max: 5 }, otherFactor: { min: 0, max: 5 } },
     division: { divisor: { min: 1, max: 5 }, quotient: { min: 0, max: 10 } },
   },
   easy: {
@@ -70,7 +73,7 @@ export const DIFFICULTY_RULES: Record<DifficultyLevel, DifficultyRules> = {
   advanced: {
     addition: { operand: { min: 100, max: 900 }, maxResult: 1000 },
     subtraction: { minuend: { min: 200, max: 1000 }, subtrahend: { min: 100, max: 999 } },
-    multiplication: { tableFactor: { min: 2, max: 9 }, otherFactor: { min: 11, max: 99 } },
+    multiplication: { tableFactor: { min: 2, max: 9 }, otherFactor: { min: 11, max: 20 } },
     division: { divisor: { min: 2, max: 9 }, quotient: { min: 11, max: 99 } },
   },
 };

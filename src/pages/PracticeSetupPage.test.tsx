@@ -15,7 +15,7 @@ describe('PracticeSetupPage', () => {
     renderSetup();
     expect(screen.getByRole('checkbox', { name: 'Addition' })).toBeChecked();
     expect(screen.getByRole('checkbox', { name: 'Subtraction' })).not.toBeChecked();
-    expect(screen.getByRole('radio', { name: 'Beginner' })).toBeChecked();
+    expect(screen.getByRole('checkbox', { name: 'Beginner' })).toBeChecked();
     expect(screen.getByRole('radio', { name: '10 questions' })).toBeChecked();
     expect(startButton()).toBeEnabled();
   });
@@ -31,11 +31,11 @@ describe('PracticeSetupPage', () => {
 
   it('selects and clears all operations with the shortcut', async () => {
     const user = renderSetup();
-    await user.click(screen.getByRole('button', { name: 'Select all' }));
+    await user.click(screen.getByRole('button', { name: 'Select all operations' }));
     for (const name of ['Addition', 'Subtraction', 'Multiplication', 'Division']) {
       expect(screen.getByRole('checkbox', { name })).toBeChecked();
     }
-    await user.click(screen.getByRole('button', { name: 'Clear all' }));
+    await user.click(screen.getByRole('button', { name: 'Clear all operations' }));
     expect(screen.getByRole('checkbox', { name: 'Addition' })).not.toBeChecked();
   });
 
@@ -47,13 +47,34 @@ describe('PracticeSetupPage', () => {
     expect(screen.getByRole('alert')).toHaveTextContent(/pick at least one operation/i);
   });
 
-  it('allows only one difficulty level, with a description for each', async () => {
+  it('allows several difficulty levels, with a description for each', async () => {
     const user = renderSetup();
-    const advanced = screen.getByRole('radio', { name: 'Advanced' });
+    const advanced = screen.getByRole('checkbox', { name: 'Advanced' });
     await user.click(advanced);
     expect(advanced).toBeChecked();
-    expect(screen.getByRole('radio', { name: 'Beginner' })).not.toBeChecked();
+    expect(screen.getByRole('checkbox', { name: 'Beginner' })).toBeChecked();
     expect(advanced).toHaveAccessibleDescription(/numbers up to 1,000/i);
+  });
+
+  it('selects and clears all levels with the shortcut', async () => {
+    const user = renderSetup();
+    await user.click(screen.getByRole('button', { name: 'Select all levels' }));
+    for (const name of ['Beginner', 'Easy', 'Intermediate', 'Advanced']) {
+      expect(screen.getByRole('checkbox', { name })).toBeChecked();
+    }
+    await user.click(screen.getByRole('button', { name: 'Clear all levels' }));
+    expect(screen.getByRole('checkbox', { name: 'Beginner' })).not.toBeChecked();
+  });
+
+  it('disables Start and explains why when no level is selected', async () => {
+    const user = renderSetup();
+    await user.click(screen.getByRole('checkbox', { name: 'Beginner' }));
+    expect(startButton()).toBeDisabled();
+    expect(screen.getByRole('alert')).toHaveTextContent('Pick at least one level to start.');
+    await user.click(screen.getByRole('checkbox', { name: 'Addition' }));
+    expect(screen.getByRole('alert')).toHaveTextContent(
+      'Pick at least one operation and one level to start.',
+    );
   });
 
   it('can be used with the keyboard', async () => {
@@ -62,22 +83,22 @@ describe('PracticeSetupPage', () => {
     await user.keyboard(' ');
     expect(screen.getByRole('checkbox', { name: 'Subtraction' })).toBeChecked();
 
-    screen.getByRole('radio', { name: 'Beginner' }).focus();
-    await user.keyboard('{ArrowRight}');
-    expect(screen.getByRole('radio', { name: 'Easy' })).toBeChecked();
+    screen.getByRole('checkbox', { name: 'Easy' }).focus();
+    await user.keyboard(' ');
+    expect(screen.getByRole('checkbox', { name: 'Easy' })).toBeChecked();
   });
 
   it('passes the chosen settings to the practice session', async () => {
     const user = renderSetup();
     await user.click(screen.getByRole('checkbox', { name: 'Subtraction' }));
-    await user.click(screen.getByRole('radio', { name: 'Intermediate' }));
+    await user.click(screen.getByRole('checkbox', { name: 'Intermediate' }));
     await user.click(screen.getByRole('radio', { name: 'Keep going' }));
     await user.click(startButton());
 
     expect(screen.getByRole('heading', { level: 1, name: 'Practice Session' })).toBeInTheDocument();
     // "Keep going" shows no total
     expect(screen.getByText('Question 1')).toBeInTheDocument();
-    // Only addition or subtraction, at intermediate level (numbers 10–100)
+    // Only addition or subtraction, at the Beginner or Intermediate level
     const problem = screen.getByRole('heading', { level: 2, name: /^What is/ });
     expect(problem.textContent).toMatch(/^\d+ [+−] \d+ = \?$/);
   });

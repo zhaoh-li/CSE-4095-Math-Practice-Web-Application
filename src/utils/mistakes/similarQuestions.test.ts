@@ -198,7 +198,11 @@ describe('generateSimilarQuestion', () => {
       const random = createSeededRandom(17);
       for (let i = 0; i < 30; i++) {
         // Start from a real question so the mistake fits its level
-        const original = generateQuestion({ operations: [operation], difficulty, random });
+        const original = generateQuestion({
+          operations: [operation],
+          difficulties: [difficulty],
+          random,
+        });
         const p = pattern({ ...original, id: `p-${i}` });
         const q = generateSimilarQuestion(p, { random });
 

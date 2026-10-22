@@ -17,7 +17,7 @@ describe('generateQuestion', () => {
     (operation, difficulty) => {
       const random = createSeededRandom(8);
       for (let i = 0; i < 50; i++) {
-        const q = generateQuestion({ operations: [operation], difficulty, random });
+        const q = generateQuestion({ operations: [operation], difficulties: [difficulty], random });
         expect(q.operation).toBe(operation);
         expect(q.difficulty).toBe(difficulty);
         expect(getQuestionErrors(q)).toEqual([]);
@@ -31,7 +31,8 @@ describe('generateQuestion', () => {
       Array.from(
         { length: 100 },
         () =>
-          generateQuestion({ operations: MATH_OPERATIONS, difficulty: 'easy', random }).operation,
+          generateQuestion({ operations: MATH_OPERATIONS, difficulties: ['easy'], random })
+            .operation,
       ),
     );
     expect(seen).toEqual(new Set(MATH_OPERATIONS));
@@ -42,7 +43,7 @@ describe('generateQuestion', () => {
     for (let i = 0; i < 100; i++) {
       const { operation } = generateQuestion({
         operations: ['addition', 'division'],
-        difficulty: 'beginner',
+        difficulties: ['beginner'],
         random,
       });
       expect(['addition', 'division']).toContain(operation);
@@ -55,7 +56,7 @@ describe('generateQuestion', () => {
     for (let i = 0; i < 200; i++) {
       const q = generateQuestion({
         operations: ['addition'],
-        difficulty: 'beginner',
+        difficulties: ['beginner'],
         random,
         avoid: previous,
       });
@@ -72,7 +73,7 @@ describe('generateQuestion', () => {
   it('falls back to a simple valid question when generation keeps failing', () => {
     const q = generateQuestion({
       operations: ['multiplication'],
-      difficulty: 'advanced',
+      difficulties: ['advanced'],
       random: () => Number.NaN,
     });
     expect(getQuestionErrors(q)).toEqual([]);
@@ -81,7 +82,7 @@ describe('generateQuestion', () => {
   });
 
   it('falls back to addition when no operations are given', () => {
-    const q = generateQuestion({ operations: [], difficulty: 'beginner' });
+    const q = generateQuestion({ operations: [], difficulties: ['beginner'] });
     expect(q.operation).toBe('addition');
     expect(getQuestionErrors(q)).toEqual([]);
   });
