@@ -789,6 +789,7 @@ Initial routes:
 
 ### 93. Fix Issues From the Final Review
 - [x] Don't offer to continue a session that had no answers.
+- [x] Keep question 1 the same after a refresh, so questions can't be "rerolled" (fixes a regression from the line above).
 - [x] Highlight **Practice** in the menu during the session and summary.
 - [x] Show the "browser won't save" warning only once.
 - [x] Let Esc cancel the "End this session?" question.
