@@ -10,7 +10,7 @@ import { ConfirmDialog } from '../components/ui/ConfirmDialog';
 import { ToggleSwitch } from '../components/ui/ToggleSwitch';
 import { useSettings } from '../context/SettingsContext';
 import { appData } from '../services/appData';
-import type { AppSettings, MathOperation } from '../types';
+import type { AppSettings, DifficultyLevel, MathOperation } from '../types';
 import styles from './SettingsPage.module.css';
 
 function formatBytes(bytes: number): string {
@@ -23,8 +23,9 @@ export const DATA_CLEARED_NOTICE = 'All app data was cleared. Everything is back
 
 export function SettingsPage() {
   const navigate = useNavigate();
-  const { settings, updateSettings, resetSettings, saveProblem, isPersistent } = useSettings();
+  const { settings, updateSettings, resetSettings, saveProblem } = useSettings();
   const [operations, setOperations] = useState<MathOperation[]>(settings.defaultOperations);
+  const [levels, setLevels] = useState<DifficultyLevel[]>(settings.defaultDifficulties);
   const [savedMessage, setSavedMessage] = useState('');
   const [isConfirmingClear, setIsConfirmingClear] = useState(false);
   const [storageUsage] = useState(() => appData.storageUsageBytes());
@@ -41,6 +42,12 @@ export function SettingsPage() {
     else setSavedMessage('');
   }
 
+  function changeLevels(next: DifficultyLevel[]) {
+    setLevels(next);
+    if (next.length > 0) change({ defaultDifficulties: next });
+    else setSavedMessage('');
+  }
+
   function handleClearAll() {
     appData.clearAllData();
     resetSettings();
@@ -54,11 +61,8 @@ export function SettingsPage() {
       <p className={styles.intro}>Changes are saved automatically.</p>
 
       <p className={styles.status} role="status">
-        {saveProblem
-          ? "Your settings couldn't be saved on this device."
-          : isPersistent
-            ? savedMessage
-            : 'This browser is not saving data, so settings reset when you close the page.'}
+        {/* A browser that can't save at all is explained once, at the top of every page */}
+        {saveProblem ? "Your settings couldn't be saved on this device." : savedMessage}
       </p>
 
       <section className={styles.panel} aria-labelledby="practice-defaults-title">
@@ -76,11 +80,12 @@ export function SettingsPage() {
             <span aria-hidden="true">! </span>Pick at least one operation to save as a default.
           </p>
         )}
-        <DifficultySelector
-          legend="Default level"
-          selected={settings.defaultDifficulty}
-          onChange={(defaultDifficulty) => change({ defaultDifficulty })}
-        />
+        <DifficultySelector legend="Default levels" selected={levels} onChange={changeLevels} />
+        {levels.length === 0 && (
+          <p className={styles.error} role="alert">
+            <span aria-hidden="true">! </span>Pick at least one level to save as a default.
+          </p>
+        )}
         <SessionLengthSelector
           legend="Default number of questions"
           selected={settings.defaultSessionLength}

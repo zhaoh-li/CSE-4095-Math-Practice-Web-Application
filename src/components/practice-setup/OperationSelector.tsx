@@ -35,7 +35,7 @@ export function OperationSelector({
           variant="secondary"
           onClick={() => onChange(allSelected ? [] : [...MATH_OPERATIONS])}
         >
-          {allSelected ? 'Clear all' : 'Select all'}
+          {allSelected ? 'Clear all operations' : 'Select all operations'}
         </Button>
       </div>
       <div className={`${styles.grid} ${styles.cols4}`}>

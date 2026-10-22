@@ -6,6 +6,7 @@ import { OperationSelector } from '../components/practice-setup/OperationSelecto
 import { SessionLengthSelector } from '../components/practice-setup/SessionLengthSelector';
 import { Button } from '../components/ui/Button';
 import { useSettings } from '../context/SettingsContext';
+import { useOneTimeNotice } from '../hooks/useOneTimeNotice';
 import { appData } from '../services/appData';
 import type { PracticeConfig } from '../types';
 import { activePatterns, createReviewConfig } from '../utils/mistakes/mistakePatterns';
@@ -16,7 +17,7 @@ export function PracticeSetupPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const routeState = location.state as { config?: unknown; notice?: unknown } | null;
-  const notice = typeof routeState?.notice === 'string' ? routeState.notice : null;
+  const notice = useOneTimeNotice();
   const { settings } = useSettings();
   const [patterns] = useState(() => appData.loadMistakePatterns());
   const [unfinished, setUnfinished] = useState(() => appData.loadActiveSession());
@@ -35,7 +36,15 @@ export function PracticeSetupPage() {
   });
 
   const isReview = config.mode === 'mistake-review';
-  const canStart = isReview ? activeMistakeCount > 0 : config.operations.length > 0;
+  const missingOperation = config.operations.length === 0;
+  const missingLevel = config.difficulties.length === 0;
+  const canStart = isReview ? activeMistakeCount > 0 : !missingOperation && !missingLevel;
+  const setupProblem =
+    missingOperation && missingLevel
+      ? 'Pick at least one operation and one level to start.'
+      : missingOperation
+        ? 'Pick at least one operation to start.'
+        : 'Pick at least one level to start.';
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -49,8 +58,13 @@ export function PracticeSetupPage() {
   function changeMode(mode: PracticeConfig['mode']) {
     setConfig((prev) => {
       if (mode === 'regular' && prev.mode === 'mistake-review') {
-        // Bring back the usual operation choices
-        return { ...prev, mode, operations: [...settings.defaultOperations] };
+        // Bring back the usual operation and level choices
+        return {
+          ...prev,
+          mode,
+          operations: [...settings.defaultOperations],
+          difficulties: [...settings.defaultDifficulties],
+        };
       }
       return { ...prev, mode };
     });
@@ -114,9 +128,9 @@ export function PracticeSetupPage() {
               onChange={(operations) => setConfig((prev) => ({ ...prev, operations }))}
             />
             <DifficultySelector
-              legend="Choose a level"
-              selected={config.difficulty}
-              onChange={(difficulty) => setConfig((prev) => ({ ...prev, difficulty }))}
+              legend="Choose levels"
+              selected={config.difficulties}
+              onChange={(difficulties) => setConfig((prev) => ({ ...prev, difficulties }))}
             />
           </>
         )}
@@ -129,7 +143,7 @@ export function PracticeSetupPage() {
         <div className={styles.footer}>
           {!canStart && (
             <p className={styles.error} role="alert">
-              <span aria-hidden="true">!</span> Pick at least one operation to start.
+              <span aria-hidden="true">!</span> {setupProblem}
             </p>
           )}
           <Button type="submit" disabled={!canStart}>

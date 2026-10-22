@@ -19,7 +19,7 @@ export interface RecentSessionSummary {
   /** ISO 8601 timestamp. */
   completedAt: string;
   operations: MathOperation[];
-  difficulty: DifficultyLevel;
+  difficulties: DifficultyLevel[];
   sessionLength: SessionLength;
   totals: PerformanceTotals;
 }

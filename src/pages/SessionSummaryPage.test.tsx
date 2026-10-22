@@ -8,7 +8,7 @@ const finishedSession: PracticeSession = {
   id: 's-1',
   mode: 'regular',
   operations: ['subtraction', 'addition'],
-  difficulty: 'intermediate',
+  difficulties: ['intermediate'],
   sessionLength: 10,
   currentQuestionIndex: 9,
   attemptedCount: 10,
@@ -82,7 +82,7 @@ describe('SessionSummaryPage', () => {
       expect(screen.getByRole('checkbox', { name: 'Addition' })).toBeChecked();
       expect(screen.getByRole('checkbox', { name: 'Subtraction' })).toBeChecked();
       expect(screen.getByRole('checkbox', { name: 'Multiplication' })).not.toBeChecked();
-      expect(screen.getByRole('radio', { name: 'Intermediate' })).toBeChecked();
+      expect(screen.getByRole('checkbox', { name: 'Intermediate' })).toBeChecked();
     });
 
     it('links to statistics and home', () => {

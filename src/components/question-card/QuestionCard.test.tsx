@@ -45,11 +45,13 @@ describe('QuestionCard front', () => {
     expect(screen.getByRole('button', { name: 'Choice 2: 56' })).toBeInTheDocument();
   });
 
-  it('keeps Flip Card disabled until an answer is picked', async () => {
-    const { user } = renderCard();
-    expect(flipButton()).toBeDisabled();
-    await user.click(choice(63));
+  it('can be flipped without picking an answer, and still reports a result', async () => {
+    const { user, onResult } = renderCard();
     expect(flipButton()).toBeEnabled();
+    await user.click(flipButton());
+    expect(within(back()).getByText("You didn't pick an answer.")).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: 'I Got It Wrong' }));
+    expect(onResult).toHaveBeenCalledWith('incorrect', null);
   });
 
   it('highlights the selected answer and lets it be changed before flipping', async () => {
@@ -158,7 +160,6 @@ describe('QuestionCard reset', () => {
     rerender(<QuestionCard key={next.id} question={next} onResult={vi.fn()} />);
 
     expect(back()).toHaveAttribute('aria-hidden', 'true');
-    expect(flipButton()).toBeDisabled();
     for (const button of within(front()).getAllByRole('button', { name: /^Choice/ })) {
       expect(button).toHaveAttribute('aria-pressed', 'false');
     }

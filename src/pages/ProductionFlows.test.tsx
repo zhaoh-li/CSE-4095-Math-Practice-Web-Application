@@ -16,7 +16,7 @@ type User = ReturnType<typeof userEvent.setup>;
 const config: PracticeConfig = {
   mode: 'regular',
   operations: ['addition'],
-  difficulty: 'beginner',
+  difficulties: ['beginner'],
   sessionLength: 5,
 };
 

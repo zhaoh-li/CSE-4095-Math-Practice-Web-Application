@@ -35,13 +35,13 @@ describe('flash card keyboard shortcuts', () => {
     expect(choice(63)).toHaveAttribute('aria-pressed', 'false');
   });
 
-  it('F flips the card only after an answer is picked', async () => {
+  it('F flips the card, even before an answer is picked', async () => {
     const { user } = renderCard();
-    await user.keyboard('f');
-    expect(isFlipped()).toBe(false);
-    await user.keyboard('2');
     await user.keyboard('F');
     expect(isFlipped()).toBe(true);
+    expect(document.querySelector('[aria-live="polite"]')).toHaveTextContent(
+      "You didn't pick an answer. Did you get it right?",
+    );
   });
 
   it('Enter flips the card when no button has focus', async () => {
@@ -143,7 +143,7 @@ describe('flash card keyboard shortcuts', () => {
       expect(screen.getByRole('button', { name: 'Flip Card' })).not.toHaveAttribute(
         'aria-keyshortcuts',
       );
-      expect(screen.getByText('Pick an answer, then flip!')).toBeInTheDocument();
+      expect(screen.getByText(/pick an answer, then flip!/i)).toBeInTheDocument();
     });
   });
 });

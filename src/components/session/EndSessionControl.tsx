@@ -25,6 +25,19 @@ export function EndSessionControl({ needsConfirmation, onEnd }: EndSessionContro
     }
   }, [isConfirming]);
 
+  // Esc means "Keep practicing", the same as in the pop-up dialogs
+  useEffect(() => {
+    if (!isConfirming) return;
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        setIsConfirming(false);
+      }
+    }
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [isConfirming]);
+
   function handleEndClick() {
     if (needsConfirmation) setIsConfirming(true);
     else onEnd();

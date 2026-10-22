@@ -18,21 +18,21 @@ describe('SettingsPage', () => {
     expect(screen.getByRole('switch', { name: /sound effects/i })).toBeChecked();
     expect(screen.getByRole('switch', { name: /show explanations/i })).toBeChecked();
     expect(screen.getByRole('checkbox', { name: 'Addition' })).toBeChecked();
-    expect(screen.getByRole('radio', { name: 'Beginner' })).toBeChecked();
+    expect(screen.getByRole('checkbox', { name: 'Beginner' })).toBeChecked();
     expect(screen.getByRole('radio', { name: '10 questions' })).toBeChecked();
   });
 
   it('saves changes automatically', async () => {
     const { user } = renderAt();
     await user.click(screen.getByRole('switch', { name: /^animations/i }));
-    await user.click(screen.getByRole('radio', { name: 'Advanced' }));
+    await user.click(screen.getByRole('checkbox', { name: 'Advanced' }));
     await user.click(screen.getByRole('radio', { name: '20 questions' }));
     await user.click(screen.getByRole('checkbox', { name: 'Division' }));
 
     expect(screen.getByRole('status')).toHaveTextContent('Settings saved.');
     expect(appData.loadSettings()).toMatchObject({
       cardAnimationsEnabled: false,
-      defaultDifficulty: 'advanced',
+      defaultDifficulties: ['beginner', 'advanced'],
       defaultSessionLength: 20,
       defaultOperations: ['addition', 'division'],
     });
@@ -69,6 +69,15 @@ describe('SettingsPage', () => {
     expect(document.documentElement.dataset.colorVision).toBe('blue-yellow');
   });
 
+  it('does not save an empty list of default levels', async () => {
+    const { user } = renderAt();
+    await user.click(screen.getByRole('checkbox', { name: 'Beginner' }));
+    expect(screen.getByRole('alert')).toHaveTextContent(/pick at least one level/i);
+    expect(appData.loadSettings().defaultDifficulties).toEqual(['beginner']);
+    await user.click(screen.getByRole('checkbox', { name: 'Easy' }));
+    expect(appData.loadSettings().defaultDifficulties).toEqual(['easy']);
+  });
+
   it('does not save an empty list of default operations', async () => {
     const { user } = renderAt();
     await user.click(screen.getByRole('checkbox', { name: 'Addition' }));
@@ -85,23 +94,23 @@ describe('SettingsPage', () => {
       appData.saveSettings({
         ...DEFAULT_SETTINGS,
         defaultOperations: ['multiplication', 'division'],
-        defaultDifficulty: 'intermediate',
+        defaultDifficulties: ['intermediate'],
         defaultSessionLength: 'continuous',
       });
       renderAt('/practice/setup');
       expect(screen.getByRole('checkbox', { name: 'Addition' })).not.toBeChecked();
       expect(screen.getByRole('checkbox', { name: 'Multiplication' })).toBeChecked();
       expect(screen.getByRole('checkbox', { name: 'Division' })).toBeChecked();
-      expect(screen.getByRole('radio', { name: 'Intermediate' })).toBeChecked();
+      expect(screen.getByRole('checkbox', { name: 'Intermediate' })).toBeChecked();
       expect(screen.getByRole('radio', { name: 'Keep going' })).toBeChecked();
     });
 
     it('can be changed for one session without changing the saved defaults', async () => {
-      appData.saveSettings({ ...DEFAULT_SETTINGS, defaultDifficulty: 'easy' });
+      appData.saveSettings({ ...DEFAULT_SETTINGS, defaultDifficulties: ['easy'] });
       const { user } = renderAt('/practice/setup');
-      await user.click(screen.getByRole('radio', { name: 'Advanced' }));
-      expect(screen.getByRole('radio', { name: 'Advanced' })).toBeChecked();
-      expect(appData.loadSettings().defaultDifficulty).toBe('easy');
+      await user.click(screen.getByRole('checkbox', { name: 'Advanced' }));
+      expect(screen.getByRole('checkbox', { name: 'Advanced' })).toBeChecked();
+      expect(appData.loadSettings().defaultDifficulties).toEqual(['easy']);
     });
   });
 
@@ -121,7 +130,7 @@ describe('SettingsPage', () => {
       appData.saveSettings({
         ...DEFAULT_SETTINGS,
         colorVisionMode: 'high-contrast',
-        defaultDifficulty: 'advanced',
+        defaultDifficulties: ['advanced'],
       });
       appData.saveAttempt({
         id: 'a1',

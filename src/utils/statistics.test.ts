@@ -40,7 +40,7 @@ function session(
     id,
     mode: 'regular',
     operations: ['addition'],
-    difficulty: 'easy',
+    difficulties: ['easy'],
     sessionLength: 10,
     currentQuestionIndex: 0,
     attemptedCount: correct + incorrect,

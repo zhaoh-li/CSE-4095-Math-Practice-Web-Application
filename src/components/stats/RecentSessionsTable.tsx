@@ -47,7 +47,7 @@ export function RecentSessionsTable({ sessions }: RecentSessionsTableProps) {
               <td data-label="Level">
                 {session.mode === 'mistake-review'
                   ? 'Mistake review'
-                  : DIFFICULTY_INFO[session.difficulty].label}
+                  : session.difficulties.map((d) => DIFFICULTY_INFO[d].label).join(', ')}
               </td>
               <td data-label="Questions">{session.totals.attempted}</td>
               <td data-label="✓ Correct">{session.totals.correct}</td>

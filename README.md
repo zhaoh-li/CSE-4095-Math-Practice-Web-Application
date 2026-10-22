@@ -1,7 +1,8 @@
 # Math Practice App
 
 A flash-card style math practice app for kids ages 7–12, built with React, TypeScript, and
-Vite. The build plan lives in [math_practice_app_todo.md](math_practice_app_todo.md).
+Vite. The build plan lives in [TODO.md](TODO.md), and the requirements in
+[SPECIFICATION.md](SPECIFICATION.md).
 
 - **Live site:** deployed on Netlify from the `main` branch
 - **Version:** 1.0.0

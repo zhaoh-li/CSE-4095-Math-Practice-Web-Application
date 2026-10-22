@@ -2,11 +2,11 @@ import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 import { StatTiles } from '../components/stats/StatTiles';
 import { Button, ButtonLink } from '../components/ui/Button';
-import { DIFFICULTY_INFO, SESSION_LENGTH_OPTIONS } from '../config/practiceOptions';
+import { SESSION_LENGTH_OPTIONS } from '../config/practiceOptions';
 import { appData } from '../services/appData';
 import type { PracticeSession } from '../types';
 import { activePatterns, createReviewConfig } from '../utils/mistakes/mistakePatterns';
-import { describeOperations } from '../utils/practiceConfig';
+import { describeDifficulties, describeOperations } from '../utils/practiceConfig';
 import { configFromSession, isCompletedSession } from '../utils/session/practiceSession';
 import { calculateAccuracy, totalsFromCounts } from '../utils/statistics';
 import styles from './SessionSummaryPage.module.css';
@@ -61,7 +61,6 @@ function SessionSummary({ session }: { session: PracticeSession }) {
           message: 'There is nothing left to review. Amazing!',
         }
       : getCheer(accuracy);
-  const difficulty = DIFFICULTY_INFO[session.difficulty];
   const lengthLabel = SESSION_LENGTH_OPTIONS.find((o) => o.value === session.sessionLength)?.label;
   const endedEarly =
     session.sessionLength !== 'continuous' && session.attemptedCount < session.sessionLength;
@@ -84,8 +83,10 @@ function SessionSummary({ session }: { session: PracticeSession }) {
           <dd>{describeOperations(config)}</dd>
         </div>
         <div>
-          <dt>{isReview ? 'Practice type' : 'Level'}</dt>
-          <dd>{isReview ? 'Mistake review' : `${difficulty.label} (Level ${difficulty.level})`}</dd>
+          <dt>
+            {isReview ? 'Practice type' : config.difficulties.length > 1 ? 'Levels' : 'Level'}
+          </dt>
+          <dd>{isReview ? 'Mistake review' : describeDifficulties(config)}</dd>
         </div>
         <div>
           <dt>Session length</dt>

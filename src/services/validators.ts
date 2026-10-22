@@ -37,6 +37,8 @@ export const isSessionLength = (value: unknown): value is SessionLength =>
   SESSION_LENGTH_OPTIONS.some((option) => option.value === value);
 const isOperationList = (value: unknown): value is MathOperation[] =>
   Array.isArray(value) && value.length > 0 && value.every(isMathOperation);
+const isDifficultyList = (value: unknown): value is DifficultyLevel[] =>
+  Array.isArray(value) && value.length > 0 && value.every(isDifficultyLevel);
 
 export function isStoredSession(value: unknown): value is PracticeSession {
   if (!isRecord(value)) return false;
@@ -44,7 +46,7 @@ export function isStoredSession(value: unknown): value is PracticeSession {
     isString(value.id) &&
     (value.mode === 'regular' || value.mode === 'mistake-review') &&
     isOperationList(value.operations) &&
-    isDifficultyLevel(value.difficulty) &&
+    isDifficultyList(value.difficulties) &&
     isSessionLength(value.sessionLength) &&
     isCount(value.currentQuestionIndex) &&
     isCount(value.attemptedCount) &&
@@ -69,7 +71,7 @@ export function isStoredAttempt(value: unknown): value is PracticeAttempt {
     isCount(value.firstOperand) &&
     isCount(value.secondOperand) &&
     isCount(value.correctAnswer) &&
-    isWhole(value.selectedAnswer) &&
+    (value.selectedAnswer === undefined || isWhole(value.selectedAnswer)) &&
     (value.result === 'correct' || value.result === 'incorrect') &&
     (value.source === 'regular' || value.source === 'mistake-review') &&
     isOptionalString(value.mistakePatternId) &&
@@ -108,8 +110,6 @@ export function isActiveSessionSnapshot(value: unknown): value is ActiveSessionS
     getQuestionErrors(currentQuestion as never).length === 0 &&
     (selectedAnswer === null || currentQuestion.choices.includes(selectedAnswer)) &&
     typeof isCardFlipped === 'boolean' &&
-    // The card can only be flipped after an answer is picked
-    (!isCardFlipped || selectedAnswer !== null) &&
     isString(value.savedAt)
   );
 }
@@ -175,7 +175,7 @@ export function parseSettings(raw: unknown): ReadResult<AppSettings> {
     feedbackEffectsEnabled: pick('feedbackEffectsEnabled', isBoolean),
     colorVisionMode: pick('colorVisionMode', isColorVisionMode),
     defaultSessionLength: pick('defaultSessionLength', isSessionLength),
-    defaultDifficulty: pick('defaultDifficulty', isDifficultyLevel),
+    defaultDifficulties: pick('defaultDifficulties', isDifficultyList),
     defaultOperations: pick('defaultOperations', isOperationList),
     masteryThreshold: pick('masteryThreshold', isThreshold),
   };
@@ -185,9 +185,12 @@ export function parseSettings(raw: unknown): ReadResult<AppSettings> {
     settings.colorVisionMode = 'red-green';
   }
 
-  // Keep a stable order: + − × ÷
+  // Keep a stable order: + − × ÷, and Beginner → Advanced
   settings.defaultOperations = MATH_OPERATIONS.filter((op) =>
     settings.defaultOperations.includes(op),
+  );
+  settings.defaultDifficulties = DIFFICULTY_LEVELS.filter((level) =>
+    settings.defaultDifficulties.includes(level),
   );
 
   return hadProblem ? { value: settings, problem: 'invalid' } : { value: settings };

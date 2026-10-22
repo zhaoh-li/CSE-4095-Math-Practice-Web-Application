@@ -182,7 +182,7 @@ export function MistakeSection({
             to="/practice/setup"
             state={{
               config: createReviewConfig(patterns, {
-                difficulty: settings.defaultDifficulty,
+                difficulties: settings.defaultDifficulties,
                 sessionLength: settings.defaultSessionLength,
               }),
             }}

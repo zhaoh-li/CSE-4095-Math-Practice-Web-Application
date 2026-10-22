@@ -8,7 +8,8 @@ const MAX_ATTEMPTS = 20;
 
 export interface GenerateQuestionOptions {
   operations: readonly MathOperation[];
-  difficulty: DifficultyLevel;
+  /** One or more levels; each question uses one of them at random. */
+  difficulties: readonly DifficultyLevel[];
   random?: RandomSource;
   /** A question not to repeat right away (usually the previous one). */
   avoid?: Question;
@@ -41,13 +42,13 @@ export function createFallbackQuestion(
 }
 
 /**
- * Creates a valid question for one of the chosen operations (picked at random
- * when there are several). Retries if a question is invalid or repeats the
+ * Creates a valid question for one of the chosen operations and levels
+ * (each picked at random when there are several). Retries if a question is invalid or repeats the
  * previous one, and falls back to a simple question if it keeps failing.
  */
 export function generateQuestion({
   operations,
-  difficulty,
+  difficulties,
   random = Math.random,
   avoid,
 }: GenerateQuestionOptions): Question {
@@ -56,6 +57,7 @@ export function generateQuestion({
   for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
     try {
       const operation = pickRandom(operations, random);
+      const difficulty = pickRandom(difficulties, random);
       const question = OPERATION_GENERATORS[operation](difficulty, random);
       const errors = getQuestionErrors(question);
       if (errors.length > 0) {
@@ -76,7 +78,7 @@ export function generateQuestion({
   if (lastValid) return lastValid;
 
   logGenerationProblem(`Using a fallback question after ${MAX_ATTEMPTS} failed attempts`);
-  return createFallbackQuestion(operations[0] ?? 'addition', difficulty);
+  return createFallbackQuestion(operations[0] ?? 'addition', difficulties[0] ?? 'beginner');
 }
 
 function logGenerationProblem(message: string, detail?: unknown) {

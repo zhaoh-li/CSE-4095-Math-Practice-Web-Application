@@ -22,8 +22,8 @@ export function PrivacyPage() {
         <h2 id="stays-in-browser">Progress stays on this device</h2>
         <p>
           Answers, statistics, mistakes, and settings are saved only in this web browser, on this
-          device. Nothing is sent to a server, and the app works the same without an internet
-          connection once it has loaded.
+          device. The internet is only used to open the app; your child's answers and progress are
+          never sent anywhere.
         </p>
       </section>
 

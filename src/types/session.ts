@@ -12,7 +12,8 @@ export type SelfReportedResult = 'correct' | 'incorrect';
 export interface PracticeConfig {
   mode: PracticeMode;
   operations: MathOperation[];
-  difficulty: DifficultyLevel;
+  /** One or more levels; each question uses one of them at random. */
+  difficulties: DifficultyLevel[];
   sessionLength: SessionLength;
 }
 
@@ -26,7 +27,8 @@ export interface PracticeAttempt {
   firstOperand: number;
   secondOperand: number;
   correctAnswer: number;
-  selectedAnswer: number;
+  /** The answer the student picked, if they picked one before flipping. */
+  selectedAnswer?: number;
   result: SelfReportedResult;
   source: QuestionSource;
   mistakePatternId?: string;
@@ -38,7 +40,7 @@ export interface PracticeSession {
   id: string;
   mode: PracticeMode;
   operations: MathOperation[];
-  difficulty: DifficultyLevel;
+  difficulties: DifficultyLevel[];
   sessionLength: SessionLength;
   currentQuestionIndex: number;
   attemptedCount: number;

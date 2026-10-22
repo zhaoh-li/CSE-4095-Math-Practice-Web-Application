@@ -118,12 +118,12 @@ export function applyAttemptToPatterns(
 
 /**
  * Setup for a mistake-review session. The operations come from the active
- * mistakes; the level is kept only for display, since each question uses
+ * mistakes; the levels are kept only for display, since each question uses
  * its own mistake's level.
  */
 export function createReviewConfig(
   patterns: readonly MistakePattern[],
-  base: Pick<PracticeConfig, 'difficulty' | 'sessionLength'>,
+  base: Pick<PracticeConfig, 'difficulties' | 'sessionLength'>,
 ): PracticeConfig {
   const operations = MATH_OPERATIONS.filter((op) =>
     activePatterns(patterns).some((p) => p.operation === op),
@@ -131,7 +131,7 @@ export function createReviewConfig(
   return {
     mode: 'mistake-review',
     operations: operations.length > 0 ? operations : ['addition'],
-    difficulty: base.difficulty,
+    difficulties: [...base.difficulties],
     sessionLength: base.sessionLength,
   };
 }

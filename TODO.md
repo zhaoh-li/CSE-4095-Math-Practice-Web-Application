@@ -20,6 +20,9 @@ npm install
 npm run dev
 ```
 
+> Note: the project was scaffolded this way and then moved to the repository root, so there is
+> no `math-practice-app/` subfolder. Run `npm install` and `npm run dev` from the root (see README).
+
 ### 2. Configure Development Tools
 - [x] Configure ESLint.
 - [x] Configure Prettier.
@@ -65,6 +68,8 @@ src/types/
 - [x] Add a **Start Practice** button.
 - [x] Add a **View Statistics** button.
 - [x] Add a **Settings** button.
+- [x] Add a **Review Mistakes** button, explaining what to do when there are no mistakes yet. (Added to match SPECIFICATION.md §4.1.)
+- [x] Add a small progress summary (questions answered, self-reported correct, mistakes to review). (Added to match SPECIFICATION.md §4.1.)
 - [x] Make all buttons keyboard accessible.
 - [x] Add responsive styling for small screens.
 
@@ -84,6 +89,8 @@ Initial routes:
 /settings
 ```
 
+> Note: `/privacy` was added in Phase 22 (Task 86). The routes live in `src/routes.tsx`.
+
 ## Phase 3: Practice Configuration
 
 ### 7. Create the Operation Selector
@@ -100,7 +107,7 @@ Initial routes:
 ### 8. Create the Difficulty Selector
 - [x] Create four difficulty options.
 - [x] Label them Beginner, Easy, Intermediate, and Advanced.
-- [x] Allow one difficulty level to be selected.
+- [x] Allow one or more difficulty levels to be selected. (Originally one; changed to match SPECIFICATION.md §4.2. Each question uses one of the chosen levels at random.)
 - [x] Visually indicate the selected level.
 - [x] Add a short description for each level.
 
@@ -116,7 +123,7 @@ Initial routes:
 - [x] Add the difficulty selector.
 - [x] Add the session-length selector.
 - [x] Add a **Start Session** button.
-- [x] Disable the button when no operation is selected.
+- [x] Disable the button when no operation or no level is selected.
 - [x] Display a validation message when necessary.
 - [x] Pass the selected configuration to the practice session.
 
@@ -165,7 +172,7 @@ Initial routes:
 - [x] Test that all answers are whole numbers.
 
 ### 16. Create the Main Question Generator
-- [x] Accept an operation and difficulty level.
+- [x] Accept the chosen operations and difficulty levels.
 - [x] Call the correct operation-specific generator.
 - [x] Randomly select an operation when multiple operations are enabled.
 - [x] Validate the generated question.
@@ -214,7 +221,7 @@ Initial routes:
 - [x] Display the current question number.
 - [x] Display the total number of questions.
 - [x] Add a **Flip Card** button.
-- [x] Disable the flip button until an answer is selected.
+- [x] Allow flipping even before an answer is selected. (Originally the button was disabled until an answer was picked; changed to match SPECIFICATION.md §4.3. The back then says "You didn't pick an answer.")
 - [x] Use large, readable math text.
 
 ### 22. Add Answer Selection
@@ -245,14 +252,14 @@ Initial routes:
 - [x] Keep the front and back aligned.
 - [x] Prevent mirrored or unreadable card content.
 - [x] Support reduced-motion preferences.
-- [x] Add a setting for disabling animations. (The card supports it with `animationsEnabled`; the Settings toggle comes in #48.)
+- [x] Add a setting for disabling animations. (Settings → **Animations**, which also stops other movement in the app.)
 
 ## Phase 7: Practice Session
 
 ### 26. Create the Practice Session State
 - [x] Store the session ID.
 - [x] Store the selected operations.
-- [x] Store the selected difficulty.
+- [x] Store the selected difficulty levels.
 - [x] Store the selected session length.
 - [x] Store the current question index.
 - [x] Store session correct and incorrect totals.
@@ -420,9 +427,9 @@ Initial routes:
 ## Phase 11: Settings
 
 ### 48. Create the Settings Page
-- [x] Add a sound-effects setting.
-- [x] Add a card-animation setting.
-- [x] Add a show-explanations setting.
+- [x] Add a sound-effects setting. (Plays a rising chime for correct answers; on by default.)
+- [x] Add a card-animation setting. (Named **Animations** in Settings.)
+- [x] Add a show-explanations setting. (Shows a **How to solve it** button on the back of each card.)
 - [x] Add a default session-length setting.
 - [x] Add a default difficulty setting.
 - [x] Add default operation settings.
@@ -754,6 +761,44 @@ Initial routes:
 - [x] Verify local-storage persistence. (Verified manually.)
 - [x] Verify responsive behavior. (Verified manually.)
 - [x] Verify that no development errors appear in the console. (Verified manually.)
+
+
+## Phase 23: Additions After v1.0
+
+### 90. Add Sound Effects
+- [x] Play a short rising chime (two notes) when an answer is marked right.
+- [x] Generate the sound in the browser with the Web Audio API (no audio files, works offline).
+- [x] Turn the chime on by default, with an on/off switch in Settings.
+- [x] Upgrade older saved settings so "Sound effects" turns on once (data version 1 → 2).
+
+### 91. Add "How to Solve It" Explanations
+- [x] Add a **How to solve it** button to the back of each card.
+- [x] Show a rule for special problems (+0, ×1, ×0, doubles, multiples of 10, …).
+- [x] Show dot pictures for small, Beginner-sized problems.
+- [x] Show break-apart steps for larger problems (make a ten, tens and ones, split the big number, …).
+- [x] Read every step aloud in words for screen readers.
+- [x] Check every step of thousands of random questions in automated tests.
+
+### 92. Match SPECIFICATION.md
+- [x] Allow one or more difficulty levels per session (data version 2 → 3 upgrades saved data).
+- [x] Add **Review Mistakes** and a progress summary to the home page.
+- [x] Allow flipping a card without picking an answer.
+- [x] Explain on the Statistics page that accuracy comes from self-reported results.
+- [x] Keep every difficulty range within the specification's limits (checked by `difficultyRules.test.ts`).
+- [x] Mark all acceptance criteria in SPECIFICATION.md §20.
+
+### 93. Fix Issues From the Final Review
+- [x] Don't offer to continue a session that had no answers.
+- [x] Highlight **Practice** in the menu during the session and summary.
+- [x] Show the "browser won't save" warning only once.
+- [x] Let Esc cancel the "End this session?" question.
+- [x] Stop one-time notices from coming back after a refresh.
+- [x] Leave unfinished sessions out of Recent Sessions.
+- [x] Correct the Privacy page's description of internet use.
+
+### 94. Documentation
+- [x] Expand the README: installing dependencies, running locally, building and deploying.
+- [x] Rename the plan to `TODO.md` and clean up `SPECIFICATION.md`.
 
 ---
 

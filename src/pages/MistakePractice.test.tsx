@@ -44,7 +44,7 @@ async function answerCard(user: User, result: SelfReportedResult) {
 const reviewConfig: PracticeConfig = {
   mode: 'mistake-review',
   operations: ['multiplication'],
-  difficulty: 'easy',
+  difficulties: ['easy'],
   sessionLength: 'continuous',
 };
 
@@ -93,7 +93,7 @@ describe('mistakes from regular practice', () => {
       config: {
         mode: 'regular',
         operations: ['addition'],
-        difficulty: 'beginner',
+        difficulties: ['beginner'],
         sessionLength: 5,
       },
     });
@@ -117,7 +117,7 @@ describe('mistakes from regular practice', () => {
       config: {
         mode: 'regular',
         operations: ['addition'],
-        difficulty: 'beginner',
+        difficulties: ['beginner'],
         sessionLength: 5,
       },
     });

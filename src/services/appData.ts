@@ -34,7 +34,7 @@ export const STORAGE_KEYS = {
 } as const;
 
 /** Bump this and add a migration whenever the stored data shape changes. */
-export const CURRENT_SCHEMA_VERSION = 2;
+export const CURRENT_SCHEMA_VERSION = 3;
 
 /** Only the most recent sessions are kept in detail. */
 export const MAX_STORED_SESSIONS = 100;
@@ -66,6 +66,49 @@ export const MIGRATIONS: Record<number, Migration> = {
       null,
     ).value;
     if (settings) storage.write(STORAGE_KEYS.settings, { ...settings, soundEffectsEnabled: true });
+  },
+
+  /**
+   * v2 → v3: practice can use several levels at once. A single saved level
+   * becomes a one-item list in settings, sessions, and the unfinished session.
+   */
+  2: (storage) => {
+    type Obj = Record<string, unknown>;
+    const isObj = (v: unknown): v is Obj =>
+      typeof v === 'object' && v !== null && !Array.isArray(v);
+    const readRaw = (key: string) =>
+      storage.read<unknown>(key, (raw) => ({ value: raw }), undefined).value;
+    // { difficulty: 'easy' } → { difficulties: ['easy'] }; leaves other data alone
+    const toList = (obj: Obj, from: string, to: string): Obj => {
+      if (obj[to] !== undefined || typeof obj[from] !== 'string') return obj;
+      const { [from]: single, ...rest } = obj;
+      return { ...rest, [to]: [single] };
+    };
+
+    const settings = readRaw(STORAGE_KEYS.settings);
+    if (isObj(settings)) {
+      storage.write(
+        STORAGE_KEYS.settings,
+        toList(settings, 'defaultDifficulty', 'defaultDifficulties'),
+      );
+    }
+
+    const sessions = readRaw(STORAGE_KEYS.sessions);
+    if (Array.isArray(sessions)) {
+      storage.write(
+        STORAGE_KEYS.sessions,
+        sessions.map((s) => (isObj(s) ? toList(s, 'difficulty', 'difficulties') : s)),
+      );
+    }
+
+    const active = readRaw(STORAGE_KEYS.activeSession);
+    if (isObj(active) && isObj(active.config) && isObj(active.session)) {
+      storage.write(STORAGE_KEYS.activeSession, {
+        ...active,
+        config: toList(active.config, 'difficulty', 'difficulties'),
+        session: toList(active.session, 'difficulty', 'difficulties'),
+      });
+    }
   },
 };
 

@@ -132,7 +132,7 @@ describe('Show explanations setting', () => {
     const config = {
       mode: 'regular',
       operations: ['addition'],
-      difficulty: 'beginner',
+      difficulties: ['beginner'],
       sessionLength: 5,
     };
     render(<TestApp initialEntries={[{ pathname: '/practice/session', state: { config } }]} />);

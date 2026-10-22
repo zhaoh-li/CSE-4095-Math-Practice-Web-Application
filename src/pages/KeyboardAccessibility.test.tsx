@@ -8,7 +8,7 @@ import type { PracticeConfig } from '../types';
 const config: PracticeConfig = {
   mode: 'regular',
   operations: ['addition'],
-  difficulty: 'beginner',
+  difficulties: ['beginner'],
   sessionLength: 5,
 };
 
